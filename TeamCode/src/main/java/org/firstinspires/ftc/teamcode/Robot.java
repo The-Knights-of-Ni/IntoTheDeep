@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.OldDrive;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimationMethodChoice;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebLog;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThread;
@@ -40,7 +41,7 @@ public class Robot {
 
     public BNO055IMU imu;
     // Subsystems
-    public OldDrive drive;
+    public Drive drive;
     public Control control;
     public Vision vision;
     public WebThread web;
@@ -147,9 +148,19 @@ public class Robot {
             var leftEncoder = (DcMotorEx) hardwareMap.dcMotor.get("leftEncoder");
             var backEncoder = (DcMotorEx) hardwareMap.dcMotor.get("backEncoder");
             var rightEncoder = (DcMotorEx) hardwareMap.dcMotor.get("rightEncoder");
-            drive = new OldDrive(new MotorGeneric<>(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor), new DcMotorEx[]{leftEncoder, backEncoder, rightEncoder}, imu, telemetry, timer);
+            drive = new Drive(
+                    new MotorGeneric<>(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor),
+                    new DcMotorEx[]{leftEncoder, backEncoder, rightEncoder},
+                    PoseEstimationMethodChoice.ODOMETRY,
+                    imu,
+                    telemetry);
         } else {
-            drive = new OldDrive(new MotorGeneric<>(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor), null, imu, telemetry, timer);
+            drive = new Drive(
+                    new MotorGeneric<>(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor),
+                    null,
+                    PoseEstimationMethodChoice.MOTOR_ENCODERS,
+                    imu,
+                    telemetry);
         }
         logger.info("Drive subsystem init finished");
 
