@@ -101,10 +101,6 @@ public class OldDrive extends Subsystem {
         this.robotTheta = 0;
     }
 
-    public static boolean isMotorDone(int currentCount, int targetCount) {
-        return Math.abs(currentCount - targetCount) < 25 || (Math.abs(currentCount - targetCount) > 50 && Math.abs(currentCount) > Math.abs(targetCount));
-    }
-
     /**
      * Uniformly sets zero power behavior of all drive motors
      *

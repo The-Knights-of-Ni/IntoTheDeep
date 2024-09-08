@@ -48,7 +48,7 @@ public class MotorControlData {
     }
 
     public void setPower() {
-        setPower(OldDrive.DRIVE_SPEED * moveSystem.calculate(targetCount, currentCount));
+        setPower(moveSystem.calculate(targetCount, currentCount));
     }
 
     public void halt() {
@@ -94,8 +94,12 @@ public class MotorControlData {
         updatePrevCount();
     }
 
+    public static boolean isMotorDone(int currentCount, int targetCount) {
+        return Math.abs(currentCount - targetCount) < 25 || (Math.abs(currentCount - targetCount) > 50 && Math.abs(currentCount) > Math.abs(targetCount));
+    }
+
     public void checkMotorDone() {
-        if (OldDrive.isMotorDone(currentCount, targetCount)) {
+        if (isMotorDone(currentCount, targetCount)) {
             isDone = true;
             halt();
         }
