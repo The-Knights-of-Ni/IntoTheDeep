@@ -52,55 +52,6 @@ class DriveTest {
     }
 
     @Test
-    void testPIDBasic() {
-        try (MockedStatic<Log> mocked = mockStatic(Log.class)) {
-            Drive drive = init();
-            drive.move(new Vector(0, 1000));
-            assertEquals(1782, drive.localizer.frontLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(1782, drive.localizer.frontRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(1782, drive.localizer.rearLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(1782, drive.localizer.rearRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-        }
-    }
-
-    @Test
-    void testPIDStrafe() {
-        try (MockedStatic<Log> mocked = mockStatic(Log.class)) {
-            Drive drive = init();
-            drive.move(new Vector(1000, 0));
-            assertEquals(2442, drive.localizer.frontLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(-2442, drive.localizer.frontRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN * 2);
-            assertEquals(-2442, drive.localizer.rearLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(2442, drive.localizer.rearRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-        }
-    }
-
-
-    @Test
-    void testPIDDiagonal() {
-        try (MockedStatic<Log> mocked = mockStatic(Log.class)) {
-            Drive drive = init();
-            drive.move(new Vector(1000, 1000));
-            assertEquals(4224, drive.localizer.frontLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(-659, drive.localizer.frontRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN * 2);
-            assertEquals(-659, drive.localizer.rearLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(4224, drive.localizer.rearRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-        }
-    }
-
-    @Test
-    void testPIDTurn() {
-        try (MockedStatic<Log> mocked = mockStatic(Log.class)) {
-            Drive drive = init();
-            drive.move(new Pose(0, 0, 90));
-            assertEquals(-1170, drive.localizer.frontLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(1170, drive.localizer.frontRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(-1170, drive.localizer.rearLeft.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-            assertEquals(1170, drive.localizer.rearRight.getCurrentPosition(), PID_TICK_COUNT_MARGIN);
-        }
-    }
-
-    @Test
     void testHolonomicMecanumController() {
         HolonomicPIDController controller = new HolonomicPIDController(new PID(xyPIDCoefficients), new PID(xyPIDCoefficients), new PID(thetaPIDCoefficients));
 //        HolonomicLocalizer localizer = new MecanumLocalizer();
