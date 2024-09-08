@@ -154,13 +154,6 @@ public class Robot {
         logger.info("Drive subsystem init finished");
 
         logger.debug("Control subsystem init started");
-        var slideMotor = (DcMotorEx) hardwareMap.dcMotor.get("slide");
-        var intakeMotor = (DcMotorEx) hardwareMap.dcMotor.get("intake");
-        var craneMotor = (DcMotorEx) hardwareMap.dcMotor.get("crane");
-        var airplaneLauncher = hardwareMap.servo.get("plane");
-        var airplaneLaunchAngle = hardwareMap.servo.get("planePivot");
-        var clawOpenClose = hardwareMap.servo.get("claw");
-        var clawShoulder = hardwareMap.servo.get("clawPivot");
         control = new Control(telemetry);
         logger.info("Control subsystem init finished");
 
