@@ -143,10 +143,10 @@ pub extern "system" fn Java_org_knightsofni_visionrs_NativeVision_process<'local
     // still needs to have an argument slot
     _class: JClass<'local>,
 ) -> jbyte {
-    // TODO: Throw java exception on error instead of panicking
+    // TODO: Throw java exception on error instead of returning -1
     let marker_location_result = get_marker_location();
-    if marker_location_result.is_ok() {
-        return jbyte::from(marker_location_to_int(marker_location_result.unwrap()));
+    if let Ok(marker_location) = marker_location_result {
+        return jbyte::from(marker_location_to_int(marker_location));
     // TODO: Fix unwrap
     } else {
         return jbyte::from(-1);
