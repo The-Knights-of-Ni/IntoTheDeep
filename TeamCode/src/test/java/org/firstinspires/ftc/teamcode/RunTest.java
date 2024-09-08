@@ -50,10 +50,11 @@ public class RunTest {
             WebThread.addLog(new WebLog("test", "Testing stuff", WebLog.LogSeverity.INFO));
             WebThread.addAction(new WebAction("test", "Doing nothing for 100 seconds"));
             for (int i = 0; i < 101; i++) {
-                Thread.sleep(1000);
+                Thread.sleep(50);
                 WebThread.setPercentage("test", i);
             }
             WebThread.removeAction("test");
+            WebThread.terminate = true;
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
