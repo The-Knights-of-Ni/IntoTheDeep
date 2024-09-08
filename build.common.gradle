@@ -19,10 +19,13 @@ import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 android {
-
-    compileSdkVersion 29
-
     signingConfigs {
         release {
             def apkStoreFile = System.getenv("APK_SIGNING_STORE_FILE")
@@ -53,6 +56,7 @@ android {
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
+        compileSdk 34
 
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with
@@ -102,8 +106,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     packagingOptions {
@@ -113,7 +117,7 @@ android {
         jni.srcDirs = []
         jniLibs.srcDir rootProject.file('libs')
     }
-    ndkVersion '21.3.6528147'
+    ndkVersion '26.0.10792818'
 }
 
 repositories {
