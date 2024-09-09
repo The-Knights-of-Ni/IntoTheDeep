@@ -21,8 +21,8 @@ public class TwoCommandDriveTest extends Auto {
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(0 * mmPerInch, 24 * mmPerInch));
-        robot.drive.moveVector(new Vector(24 * mmPerInch, 0 * mmPerInch));
+        robot.drive.move(new Vector(0 * mmPerInch, 24 * mmPerInch));
+        robot.drive.move(new Vector(24 * mmPerInch, 0 * mmPerInch));
         sleep(2000);
     }
 }

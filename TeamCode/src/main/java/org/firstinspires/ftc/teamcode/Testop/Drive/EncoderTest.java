@@ -21,7 +21,7 @@ public class EncoderTest extends Auto {
         waitForStart();
         timer.reset();
         while (opModeIsActive()) {
-            telemetry.addData("Motor Encoder", "Positions: %d %d %d %d", robot.drive.frontLeft.getCurrentPosition(), robot.drive.frontRight.getCurrentPosition(), robot.drive.rearLeft.getCurrentPosition(), robot.drive.rearRight.getCurrentPosition());
+            telemetry.addData("Motor Encoder", "Positions: %d %d %d %d", robot.drive.localizer.frontLeft.getCurrentPosition(), robot.drive.localizer.frontRight.getCurrentPosition(), robot.drive.localizer.rearLeft.getCurrentPosition(), robot.drive.localizer.rearRight.getCurrentPosition());
             telemetry.update();
         }
     }

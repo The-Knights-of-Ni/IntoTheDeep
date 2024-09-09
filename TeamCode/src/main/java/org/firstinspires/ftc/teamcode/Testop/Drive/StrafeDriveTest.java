@@ -21,7 +21,7 @@ public class StrafeDriveTest extends Auto {
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(12 * mmPerInch, 0 * mmPerInch));
+        robot.drive.move(new Vector(12 * mmPerInch, 0 * mmPerInch));
         sleep(2000);
     }
 }

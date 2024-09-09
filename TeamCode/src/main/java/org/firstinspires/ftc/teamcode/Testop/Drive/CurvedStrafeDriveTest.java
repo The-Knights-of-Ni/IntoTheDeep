@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Testop.Drive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Auto.Auto;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
+import org.firstinspires.ftc.teamcode.Util.Pose;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 @Autonomous(name = "Curved Strafe Test", group = "Concept")
@@ -21,7 +22,7 @@ public class CurvedStrafeDriveTest extends Auto {
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(12 * mmPerInch, 12 * mmPerInch), 90);
+        robot.drive.move(new Pose(12 * mmPerInch, 12 * mmPerInch, 90));
         sleep(2000);
     }
 }
