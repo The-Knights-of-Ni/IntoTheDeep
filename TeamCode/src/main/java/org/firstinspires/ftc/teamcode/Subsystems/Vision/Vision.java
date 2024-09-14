@@ -19,6 +19,7 @@ import java.util.List;
  * @see <a href="https://github.com/OpenFTC/EasyOpenCV">EasyOpenCV</a>
  */
 public class Vision extends Subsystem {
+    // Hello GIT reader
     public static final int CAMERA_WIDTH = 1920; // width of wanted camera resolution
     public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
     public static final String WEBCAM_NAME =
