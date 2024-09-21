@@ -4,8 +4,8 @@ import org.firstinspires.ftc.teamcode.Util.Pose;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 
-//@Autonomous(name = "Auto Red Top", group = "Auto")
-public class TopRedNew extends Auto {
+@Autonomous(name = "Auto Red Top", group = "Auto")
+public class TopRed extends Auto {
     @SuppressWarnings("RedundantThrows")
     public void runOpMode() throws InterruptedException {
         //robot begins to function
