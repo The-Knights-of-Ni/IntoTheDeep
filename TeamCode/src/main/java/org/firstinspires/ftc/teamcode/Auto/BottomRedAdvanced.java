@@ -1,2 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto;public class BottomRedAdvanced {
+package org.firstinspires.ftc.teamcode.Auto;
+
+public class BottomRedAdvanced {
 }
