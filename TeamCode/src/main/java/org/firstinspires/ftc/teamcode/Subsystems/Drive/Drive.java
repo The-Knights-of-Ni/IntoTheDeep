@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicContr
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Localizer.MecanumLocalizer;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.IMU;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.MotorEncoders;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.PoseEstimationMethod;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.PurePursuit;
@@ -82,6 +83,8 @@ public class Drive extends Subsystem {
         as given by the parameter poseEstimationMethodChoice*/
         if (poseEstimationMethodChoice == PoseEstimationMethodChoice.IMU) {
             this.poseEstimator = new IMU(imu);
+        } else if (poseEstimationMethodChoice == PoseEstimationMethodChoice.MOTOR_ENCODERS) {
+            this.poseEstimator = new MotorEncoders(motors);
         } else if (poseEstimationMethodChoice == PoseEstimationMethodChoice.ODOMETRY) {
             if (odometry == null) {
                 throw new IllegalArgumentException("Odometry is null, but pose estimation method is ODOMETRY");
