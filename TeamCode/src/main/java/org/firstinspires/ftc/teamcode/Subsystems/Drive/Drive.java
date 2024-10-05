@@ -300,6 +300,7 @@ public class Drive extends Subsystem {
             var target = profile.calculate(timer.seconds());
             var positionMotorPowers = positionController.calculate(currentPose, new Pose(target.x.position,
                     target.y.position,
+
                     target.heading.position)); // TODO: deal with angles properly
             localizer.setPowers(positionMotorPowers);
             currentTickCounts = new MotorGeneric<>(localizer.frontLeft.getCurrentPosition(), localizer.frontRight.getCurrentPosition(), localizer.rearLeft.getCurrentPosition(), localizer.rearRight.getCurrentPosition());
