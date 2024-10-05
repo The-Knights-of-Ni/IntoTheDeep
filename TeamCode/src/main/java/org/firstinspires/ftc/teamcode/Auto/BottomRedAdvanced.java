@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Util.Pose;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
-//@Autonomous(name = "Auto Red Bottom Advanced", group = "Auto")
+@Autonomous(name = "Auto Red Bottom Advanced", group = "Auto")
 public class BottomRedAdvanced extends Auto {
     @SuppressWarnings("RedundantThrows")
     public void runOpMode() throws InterruptedException {
