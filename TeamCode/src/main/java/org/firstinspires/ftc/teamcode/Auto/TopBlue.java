@@ -13,8 +13,8 @@ public class TopBlue extends Auto {
         waitForStart();
         timer.reset();
         robot.drive.move(new Pose(-12 * mmPerInch, 60 * mmPerInch, -90));
-        robot.drive.move(-90);
-        robot.drive.move(new Pose(0, 36 * mmPerInch, 0));
+        //robot.drive.move(-90);
+        robot.drive.move(new Pose(0, 36 * mmPerInch, -90));
         //TODO: change x and y based on length of claw
         robot.drive.move(new Pose(12 * mmPerInch, 12 * mmPerInch, 45));
         //TODO: open claw, drop sample

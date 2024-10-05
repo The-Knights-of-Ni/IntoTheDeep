@@ -14,8 +14,8 @@ public class BottomRed extends Auto {
         timer.reset();
 
         robot.drive.move(new Pose(-12 * mmPerInch, 60 * mmPerInch, -90));
-        robot.drive.move(-90);
-        robot.drive.move(new Pose(0, 12 * mmPerInch, 0));
+        //robot.drive.move(-90);
+        robot.drive.move(new Pose(0, 12 * mmPerInch, -90));
         robot.drive.move(new Pose(0, 24 * mmPerInch, 0));
         //TODO: change x and y based on length of claw
         robot.drive.move(new Pose(12 * mmPerInch, 12 * mmPerInch, 45));
