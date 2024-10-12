@@ -13,15 +13,16 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
  */
 public class Control extends Subsystem {
     public final Servo claw; //The servo that controls the claw
-    public final Servo pivot; //The DcMotorEx that controls the pivot
-    public final DcMotorEx linearSlide;
+    public final Servo pivot; //The Servo that controls the pivot
+    public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor) {
+    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, DcMotorEx linSlideMotor) {
         super(telemetry, "control");
 
         //Initializing instance variables
         this.claw = clawMotor;
         this.pivot = pivotMotor;
+        this.linearSlide = linSlideMotor;
     }
 
     /**
@@ -112,14 +113,7 @@ public class Control extends Subsystem {
      * @param newPosition The position to move the pivot to
      */
     public void movePivot(PivotPosition newPosition) {
-        while (pivot.getPosition() < newPosition.pos) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                /*See note on InterruptedException above*/
-                throw new RuntimeException(e);
-            }
-        }
+        claw.setPosition(newPosition.pos);
     }
 
     /**
@@ -130,7 +124,7 @@ public class Control extends Subsystem {
      */
     public void movePivotSync(PivotPosition newPosition) {
         movePivot(newPosition);
-        while (pivot.isBusy()) {
+        while (Math.abs(claw.getPosition() - newPosition.pos) > 0.05) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -140,20 +134,6 @@ public class Control extends Subsystem {
         }
     }
 
-
-    /*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/
-    /**
-     * An enum to keep track of the positions we need the slide to be in regularly.
-     */
-    public enum PivotPosition {
-        UP(2222),
-        DOWN(0);
-        public final int pos;
-
-        PivotPosition(int pos) {
-            this.pos = pos;
-        }
-    }
 
     /**
      * Begins the process of moving the linear slide.
@@ -192,13 +172,30 @@ public class Control extends Subsystem {
         }
     }
 
+    /*                     Enums for linear slide and pivot positions below                       */
+
+    //Not sure if this will be needed for the pivot, but I've left the implementation in case it is
+    /*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/
+    /**
+     * An enum to keep track of the positions we need the slide to be in regularly.
+     */
+    public enum PivotPosition {
+        UP(1),
+        DOWN(0);
+        public final int pos;
+
+        PivotPosition(int pos) {
+            this.pos = pos;
+        }
+    }
+
 
     /*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/
     /**
      * An enum to keep track of the positions we need the slide to be in regularly.
      */
     public enum LinearSlidePosition {
-        UP(2222);
+        UP(2222),
         DOWN(0);
         public final int pos;
 
