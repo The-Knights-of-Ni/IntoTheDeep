@@ -15,8 +15,10 @@ public class Control extends Subsystem {
     public final Servo claw; //The servo that controls the claw
     public final Servo pivot; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
+    
+    public final DcMotorEx pivot; //The DcMotorEx that controls the pivot
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, DcMotorEx linSlideMotor) {
+    public Control(Telemetry telemetry, Servo clawMotor, DcMotorEx pivotMotor) {
         super(telemetry, "control");
 
         //Initializing instance variables
@@ -45,6 +47,27 @@ public class Control extends Subsystem {
 
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+=======
+    }
+
+    /**
+     * Gets all defaults, directions,etc. ready for the autonomous period
+     */
+    public void initDevicesAuto() {
+        pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        claw.setDirection(Servo.Direction.FORWARD);
+    }
+
+    /**
+     * Gets all defaults, directions,etc. ready for the teleop period
+     */
+    public void initDevicesTeleop() {
+        pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        claw.setDirection(Servo.Direction.FORWARD);
     }
 
 
@@ -144,6 +167,8 @@ public class Control extends Subsystem {
     public void moveLinearSlide(LinearSlidePosition newPosition) {
         linearSlide.setPower(-0.8);
         while (linearSlide.getCurrentPosition() < newPosition.pos) {
+        pivot.setPower(-0.8);
+        while (pivot.getCurrentPosition() < newPosition.pos) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -163,6 +188,18 @@ public class Control extends Subsystem {
     public void moveLinearSlideSync(LinearSlidePosition newPosition) {
         moveLinearSlide(newPosition);
         while (linearSlide.isBusy()) {
+        pivot.setPower(0);
+    }
+
+    /**
+     * Moves the pivot fully.
+     * The method will not terminate until the pivot is fully moved, meaning that only the action
+     * of the pivot can be occurring at the given time.
+     * @param newPosition The position to move the pivot to
+     */
+    public void movePivotSync(PivotPosition newPosition) {
+        movePivot(newPosition);
+        while (pivot.isBusy()) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
