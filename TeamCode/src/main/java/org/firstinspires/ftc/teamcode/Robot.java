@@ -165,7 +165,7 @@ public class Robot {
         logger.info("Drive subsystem init finished");
 
         logger.debug("Control subsystem init started");
-        control = new Control(telemetry, (Servo) hardwareMap.get("claw"), (DcMotorEx) hardwareMap.get("pivot"));
+        control = new Control(telemetry, (Servo) hardwareMap.get("claw"), (Servo) hardwareMap.get("pivot"), (DcMotorEx) hardwareMap.get("linear slide"));
         logger.info("Control subsystem init finished");
 
         if (visionEnabled) {
