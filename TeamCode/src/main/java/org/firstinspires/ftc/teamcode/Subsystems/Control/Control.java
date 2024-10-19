@@ -15,16 +15,14 @@ public class Control extends Subsystem {
     public final Servo claw; //The servo that controls the claw
     public final Servo pivot; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
-    
-    public final DcMotorEx pivot; //The DcMotorEx that controls the pivot
 
-    public Control(Telemetry telemetry, Servo clawMotor, DcMotorEx pivotMotor) {
+    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, DcMotorEx linearSlideMotor) {
         super(telemetry, "control");
 
         //Initializing instance variables
         this.claw = clawMotor;
         this.pivot = pivotMotor;
-        this.linearSlide = linSlideMotor;
+        this.linearSlide = linearSlideMotor;
     }
 
     /**
@@ -47,27 +45,6 @@ public class Control extends Subsystem {
 
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-=======
-    }
-
-    /**
-     * Gets all defaults, directions,etc. ready for the autonomous period
-     */
-    public void initDevicesAuto() {
-        pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        claw.setDirection(Servo.Direction.FORWARD);
-    }
-
-    /**
-     * Gets all defaults, directions,etc. ready for the teleop period
-     */
-    public void initDevicesTeleop() {
-        pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        claw.setDirection(Servo.Direction.FORWARD);
     }
 
 
