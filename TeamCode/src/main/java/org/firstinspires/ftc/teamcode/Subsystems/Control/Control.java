@@ -13,6 +13,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
  */
 public class Control extends Subsystem {
     public final Servo claw; //The servo that controls the claw
+    public final Servo pivot; //The Servo that controls the pivot
+    public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
+    
     public final DcMotorEx pivot; //The DcMotorEx that controls the pivot
 
     public Control(Telemetry telemetry, Servo clawMotor, DcMotorEx pivotMotor) {
@@ -21,6 +24,30 @@ public class Control extends Subsystem {
         //Initializing instance variables
         this.claw = clawMotor;
         this.pivot = pivotMotor;
+        this.linearSlide = linSlideMotor;
+    }
+
+    /**
+     * Gets all defaults, directions, etc. ready for the autonomous period
+     */
+    public void initDevicesAuto() {
+        pivot.setDirection(Servo.Direction.FORWARD);
+        claw.setDirection(Servo.Direction.FORWARD);
+
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    /**
+     * Gets all defaults, directions, etc. ready for the teleop period
+     */
+    public void initDevicesTeleop() {
+        pivot.setDirection(Servo.Direction.FORWARD);
+        claw.setDirection(Servo.Direction.FORWARD);
+
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+=======
     }
 
     /**
@@ -109,6 +136,37 @@ public class Control extends Subsystem {
      * @param newPosition The position to move the pivot to
      */
     public void movePivot(PivotPosition newPosition) {
+        claw.setPosition(newPosition.pos);
+    }
+
+    /**
+     * Moves the pivot fully.
+     * The method will not terminate until the pivot is fully moved, meaning that only the action
+     * of the pivot can be occurring at the given time.
+     * @param newPosition The position to move the pivot to
+     */
+    public void movePivotSync(PivotPosition newPosition) {
+        movePivot(newPosition);
+        while (Math.abs(claw.getPosition() - newPosition.pos) > 0.05) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                /*See note on InterruptedException above*/
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    /**
+     * Begins the process of moving the linear slide.
+     * Does not wait for the linear slide movement to finish before terminating the method an allowing
+     * other functions to begin.
+     * @param newPosition The position to move the linear slide to
+     */
+    public void moveLinearSlide(LinearSlidePosition newPosition) {
+        linearSlide.setPower(-0.8);
+        while (linearSlide.getCurrentPosition() < newPosition.pos) {
         pivot.setPower(-0.8);
         while (pivot.getCurrentPosition() < newPosition.pos) {
             try {
@@ -118,6 +176,18 @@ public class Control extends Subsystem {
                 throw new RuntimeException(e);
             }
         }
+        linearSlide.setPower(0);
+    }
+
+    /**
+     * Moves the linear slide fully.
+     * The method will not terminate until the linear slide is fully moved, meaning that only the action
+     * of the linear slide can be occurring at the given time.
+     * @param newPosition The position to move the linear slide to
+     */
+    public void moveLinearSlideSync(LinearSlidePosition newPosition) {
+        moveLinearSlide(newPosition);
+        while (linearSlide.isBusy()) {
         pivot.setPower(0);
     }
 
@@ -139,17 +209,34 @@ public class Control extends Subsystem {
         }
     }
 
+    /*                     Enums for linear slide and pivot positions below                       */
 
+    //Not sure if this will be needed for the pivot, but I've left the implementation in case it is
     /*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/
     /**
      * An enum to keep track of the positions we need the slide to be in regularly.
      */
     public enum PivotPosition {
-        UP(2222),
+        UP(1),
         DOWN(0);
         public final int pos;
 
         PivotPosition(int pos) {
+            this.pos = pos;
+        }
+    }
+
+
+    /*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/
+    /**
+     * An enum to keep track of the positions we need the slide to be in regularly.
+     */
+    public enum LinearSlidePosition {
+        UP(2222),
+        DOWN(0);
+        public final int pos;
+
+        LinearSlidePosition(int pos) {
             this.pos = pos;
         }
     }
