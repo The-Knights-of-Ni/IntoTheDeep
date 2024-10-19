@@ -6,22 +6,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
+import org.firstinspires.ftc.teamcode.Util.ServoEx;
 
 
 /**
  * Control subsystem for controlling arms and claws
  */
 public class Control extends Subsystem {
-    public final Servo claw; //The servo that controls the claw
-    public final Servo pivot; //The Servo that controls the pivot
+    public final ServoEx claw; //The servo that controls the claw
+    public final ServoEx pivot; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
 
     public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, DcMotorEx linearSlideMotor) {
         super(telemetry, "control");
 
         //Initializing instance variables
-        this.claw = clawMotor;
-        this.pivot = pivotMotor;
+        this.claw = (ServoEx) clawMotor;
+        this.pivot = (ServoEx) pivotMotor;
         this.linearSlide = linearSlideMotor;
     }
 
@@ -29,9 +30,6 @@ public class Control extends Subsystem {
      * Gets all defaults, directions, etc. ready for the autonomous period
      */
     public void initDevicesAuto() {
-        pivot.setDirection(Servo.Direction.FORWARD);
-        claw.setDirection(Servo.Direction.FORWARD);
-
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -40,9 +38,6 @@ public class Control extends Subsystem {
      * Gets all defaults, directions, etc. ready for the teleop period
      */
     public void initDevicesTeleop() {
-        pivot.setDirection(Servo.Direction.FORWARD);
-        claw.setDirection(Servo.Direction.FORWARD);
-
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -142,18 +137,6 @@ public class Control extends Subsystem {
      * @param newPosition The position to move the linear slide to
      */
     public void moveLinearSlide(LinearSlidePosition newPosition) {
-        linearSlide.setPower(-0.8);
-        while (linearSlide.getCurrentPosition() < newPosition.pos) {
-        pivot.setPower(-0.8);
-        while (pivot.getCurrentPosition() < newPosition.pos) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                /*See note on InterruptedException above*/
-                throw new RuntimeException(e);
-            }
-        }
-        linearSlide.setPower(0);
     }
 
     /**
@@ -164,25 +147,5 @@ public class Control extends Subsystem {
      */
     public void moveLinearSlideSync(LinearSlidePosition newPosition) {
         moveLinearSlide(newPosition);
-        while (linearSlide.isBusy()) {
-        pivot.setPower(0);
-    }
-
-    /**
-     * Moves the pivot fully.
-     * The method will not terminate until the pivot is fully moved, meaning that only the action
-     * of the pivot can be occurring at the given time.
-     * @param newPosition The position to move the pivot to
-     */
-    public void movePivotSync(PivotPosition newPosition) {
-        movePivot(newPosition);
-        while (pivot.isBusy()) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                /*See note on InterruptedException above*/
-                throw new RuntimeException(e);
-            }
-        }
     }
 }
