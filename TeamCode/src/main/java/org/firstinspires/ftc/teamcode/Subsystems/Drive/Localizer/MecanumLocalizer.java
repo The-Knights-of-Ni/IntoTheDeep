@@ -18,17 +18,13 @@ public class MecanumLocalizer extends HolonomicLocalizer {
     }
 
     public MotorGeneric<Double> localize(HolonomicControllerOutput output) {
-        var xPower = output.x;
-        var yPower = output.y;
-        var thetaPower = output.heading;
-        var yRotated = xPower * Math.cos(output.currentPose.heading) - yPower * Math.sin(output.currentPose.heading); // Inverted bc api
-        var xRotated = xPower * Math.sin(output.currentPose.heading) + yPower * Math.cos(output.currentPose.heading);
+        var denominator = Math.max(Math.abs(output.y) + Math.abs(output.y) + Math.abs(output.heading), 1);
         return cropMotorPowers(
                 new MotorGeneric<>(
-                        xRotated + yRotated + thetaPower,
-                        xRotated - yRotated + thetaPower,
-                        xRotated - yRotated - thetaPower,
-                        xRotated + yRotated - thetaPower)
+                        (output.y + output.x + output.heading) / denominator,
+                        (output.y - output.x - output.heading) / denominator,
+                        (output.y - output.x + output.heading) / denominator,
+                        (output.y + output.x - output.heading) / denominator)
         );
     }
 

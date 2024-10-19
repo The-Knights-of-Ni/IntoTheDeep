@@ -55,7 +55,7 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-        robot.control.initDevicesTeleop();
+//        robot.control.initDevicesTeleop();
         waitForStart();
 
         telemetry.clearAll();
@@ -93,6 +93,8 @@ public class Teleop extends LinearOpMode {
                 } else {
                     motorPowers = robot.drive.calcMotorPowers(sensitivityLowPower * Robot.gamepad1.leftStickX, sensitivityLowPower * robot.gamepad1.leftStickY, sensitivityLowPower * robot.gamepad1.rightStickX);
                 }
+                telemetry.addData("Motor powers", motorPowers);
+                telemetry.update();
 
                 //gets the robot to actually move from the newly created MotorGeneric
                 robot.drive.setDrivePowers(motorPowers);
@@ -111,6 +113,8 @@ public class Teleop extends LinearOpMode {
                 } else {
                     motorPowers = robot.drive.calcMotorPowers(Robot.gamepad1.leftStickX * sensitivityLowPower, Robot.gamepad1.leftStickY * sensitivityLowPower, triggerHit * sensitivityLowPower);
                 }
+                telemetry.addData("Motor powers", motorPowers);
+                telemetry.update();
                 robot.drive.setDrivePowers(motorPowers);
 
                 if ((Robot.gamepad1.bButton.isPressed() && Robot.gamepad1.yButton.isPressed()) || (Robot.gamepad2.bButton.isPressed() && Robot.gamepad2.yButton.isPressed())) {
