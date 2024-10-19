@@ -165,12 +165,12 @@ public class Robot {
         logger.info("Drive subsystem init finished");
 
         logger.debug("Control subsystem init started");
-        control = new Control(telemetry, (Servo) hardwareMap.get("claw"), (Servo) hardwareMap.get("pivot"), (DcMotorEx) hardwareMap.get("linear slide"));
+//        control = new Control(telemetry, (Servo) hardwareMap.get("claw"), (DcMotorEx) hardwareMap.get("pivot"));
         logger.info("Control subsystem init finished");
 
         if (visionEnabled) {
             logger.debug("Vision subsystem init started");
-            vision = new Vision(telemetry, hardwareMap, allianceColor);
+//            vision = new Vision(telemetry, hardwareMap, allianceColor);
             logger.info("Vision subsystem init finished");
         } else {
             logger.warning("Vision subsystem init skipped");
