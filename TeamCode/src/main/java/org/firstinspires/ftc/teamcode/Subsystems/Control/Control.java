@@ -111,6 +111,10 @@ public class Control extends Subsystem {
         claw.setPosition(newPosition.pos);
     }
 
+    public int getPivotPosition(){
+        return 0;
+    }
+
     /**
      * Moves the pivot fully.
      * The method will not terminate until the pivot is fully moved, meaning that only the action
@@ -138,6 +142,16 @@ public class Control extends Subsystem {
      */
     public void moveLinearSlide(LinearSlidePosition newPosition) {
     }
+
+    //Power ranges between [-1.0, 1.0]
+    public void setSlidePower(double power){
+        linearSlide.setPower(power);
+    }
+
+    public void getSlidePosition(){
+    }
+
+    public void setSlidePosition(){}
 
     /**
      * Moves the linear slide fully.
