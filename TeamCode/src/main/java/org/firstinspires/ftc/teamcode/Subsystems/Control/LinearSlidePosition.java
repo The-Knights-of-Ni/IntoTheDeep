@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Control;
 
-/*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/
+/*TODO: Determine what values the positions should be should be*/
 /**
  * An enum to keep track of the positions we need the slide to be in regularly.
  */
 public enum LinearSlidePosition {
-    UP(2222),
-    DOWN(0);
+    DOWN(0),
+    BASKETLOW(0),
+    BASKETHIGH(0),
+    SUBMERSIBLELOW(0),
+    SUBMERSIBLEHIGH(0);
     public final int pos;
 
     LinearSlidePosition(int pos) {

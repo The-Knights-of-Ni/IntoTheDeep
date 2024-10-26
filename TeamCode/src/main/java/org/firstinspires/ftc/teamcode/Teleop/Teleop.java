@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.GamepadWrapper;
-import org.firstinspires.ftc.teamcode.Subsystems.Control.LinearSlidePosition;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.*;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -129,48 +129,61 @@ public class Teleop extends LinearOpMode {
                     robot.control.closeClaw();
                 }
 
+
+                /*
                 //linear slide power????
+                //Way for driver to override and control linear slide (in case anything goes wrong)
                 slidePowerVel = Robot.gamepad2.triggerLeft - Robot.gamepad2.triggerRight;
                 if (Math.abs(slidePowerVel) >= 0.15) {
                     robot.control.setSlidePower(slidePowerVel);
                 } else {
                     robot.control.setSlidePower(0);
-                }
+                }*/
 
-                //Linear Slide (4 pre-set positions)
+
+                //Scoring Position (4 pre-set positions)
                 //TODO: correct heights
-                if (Robot.gamepad2.dPadUp.isPressed()) {
-                    robot.control.moveLinearSlide(LinearSlidePosition.DOWN);
-                }
-                if (Robot.gamepad2.dPadDown.isPressed()) {
-                    robot.control.moveLinearSlide(LinearSlidePosition.DOWN);
-                }
-                if (Robot.gamepad2.dPadRight.isPressed()) {
-                    robot.control.moveLinearSlide(LinearSlidePosition.DOWN);
-                }
-                if (Robot.gamepad2.dPadLeft.isPressed()) {
-                    robot.control.moveLinearSlide(LinearSlidePosition.DOWN);
-                }
-
-                //Adjust height (manual linear slide override)
-                if (robot.gamepad2.bumperRight.isPressed()) {
-                    robot.control.setSlidePower(1);
-                    robot.control.setSlidePosition(getSlidePosition() + 150);
-                }
-                if (robot.gamepad2.bumperLeft.isPressed()) {
-                    robot.control.setSlidePower(1);
-                    robot.control.setSlidePosition(getSlidePosition() - 150);
-                }
-
-                //Adjust the pivot (manual pivot override)
-                if (robot.gamepad2.xButton.isPressed()) {
+                if (Robot.gamepad2.dPadUp.isPressed() || Robot.gamepad1.dPadUp.isPressed()) {
+                    robot.control.moveLinearSlide(LinearSlidePosition.BASKETLOW);
                     robot.control.movePivot(PivotPosition.UP);
                 }
-                if (robot.gamepad2.yButton.isPressed()) {
-                    robot.control.movePivot(getPivotPosition() - 150);
+                if (Robot.gamepad2.dPadDown.isPressed() || Robot.gamepad1.dPadDown.isPressed()) {
+                    robot.control.moveLinearSlide(LinearSlidePosition.BASKETHIGH);
+                    robot.control.movePivot(PivotPosition.UP);
+                }
+                if (Robot.gamepad2.dPadRight.isPressed() || Robot.gamepad1.dPadRight.isPressed()) {
+                    robot.control.moveLinearSlide(LinearSlidePosition.SUBMERSIBLELOW);
+                    robot.control.movePivot(PivotPosition.UP);
+                }
+                if (Robot.gamepad2.dPadLeft.isPressed() || Robot.gamepad1.dPadLeft.isPressed()) {
+                    robot.control.moveLinearSlide(LinearSlidePosition.SUBMERSIBLEHIGH);
+                    robot.control.movePivot(PivotPosition.UP);
+                }
+                if (Robot.gamepad2.bButton.isPressed() || Robot.gamepad1.bButton.isPressed()) {
+                    robot.control.moveLinearSlide(LinearSlidePosition.DOWN);
+                    robot.control.movePivot(PivotPosition.DOWN);
                 }
 
-                
+
+                //Adjust height (manual linear slide override)
+                if (robot.gamepad2.bumperRight.isPressed() || robot.gamepad1.bumperRight.isPressed()) {
+                    robot.control.setSlidePower(1);
+                    robot.control.setSlidePosition(robot.control.getSlidePosition() + 150);
+                }
+                if (robot.gamepad2.bumperLeft.isPressed() || robot.gamepad1.bumperLeft.isPressed()) {
+                    robot.control.setSlidePower(1);
+                    robot.control.setSlidePosition(robot.control.getSlidePosition() - 150);
+                }
+
+
+                //Adjust the pivot (manual pivot override)
+                if (robot.gamepad2.triggerRight > 0.05 || robot.gamepad1.xButton.isPressed()) {
+                    robot.control.movePivot(PivotPosition.UP);
+                }
+                if (robot.gamepad2.triggerLeft > 0.05 || robot.gamepad1.xButton.isPressed()) {
+                    robot.control.movePivot(PivotPosition.DOWN);
+                }
+
 
             } else {
                 // Must use gamepad 1 for one gamepad TODO: Find elegant fix

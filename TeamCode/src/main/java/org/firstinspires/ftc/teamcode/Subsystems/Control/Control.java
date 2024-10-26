@@ -148,10 +148,11 @@ public class Control extends Subsystem {
         linearSlide.setPower(power);
     }
 
-    public void getSlidePosition(){
+    public int getSlidePosition(){
+        return 1;
     }
 
-    public void setSlidePosition(){}
+    public void setSlidePosition(int pos){}
 
     /**
      * Moves the linear slide fully.
