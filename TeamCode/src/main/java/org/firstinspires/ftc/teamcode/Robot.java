@@ -28,8 +28,8 @@ public class Robot {
     public static final double length = 18.0;
     public static final double width = 18.0;
     private final MasterLogger logger;
-    public static GamepadWrapper gamepad1;
-    public static GamepadWrapper gamepad2;
+    public GamepadWrapper gamepad1;
+    public GamepadWrapper gamepad2;
     public final String initLogTag = "init";
     public final ElapsedTime timer;
     public final boolean visionEnabled;
@@ -81,12 +81,12 @@ public class Robot {
         this.visionEnabled = flags.getOrDefault("vision", true);
         this.webEnabled = flags.getOrDefault("web", false);
         this.odometryEnabled = flags.getOrDefault("odometry", false);
-        Robot.gamepad1 = new GamepadWrapper(gamepad1);
-        Robot.gamepad2 = new GamepadWrapper(gamepad2);
+        this.gamepad1 = new GamepadWrapper(gamepad1);
+        this.gamepad2 = new GamepadWrapper(gamepad2);
         init();
     }
 
-    public static void updateGamepads() {
+    public void updateGamepads() {
         gamepad1.update();
         gamepad2.update();
     }
