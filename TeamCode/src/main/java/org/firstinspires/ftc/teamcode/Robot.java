@@ -28,6 +28,7 @@ public class Robot {
     public static final double length = 18.0;
     public static final double width = 18.0;
     private final MasterLogger logger;
+    // Static because of WebThread
     public static GamepadWrapper gamepad1;
     public static GamepadWrapper gamepad2;
     public final String initLogTag = "init";
@@ -86,9 +87,9 @@ public class Robot {
         init();
     }
 
-    public static void updateGamepads() {
-        gamepad1.update();
-        gamepad2.update();
+    public void updateGamepads() {
+        Robot.gamepad1.update();
+        Robot.gamepad2.update();
     }
 
     public double getBatteryVoltage() {

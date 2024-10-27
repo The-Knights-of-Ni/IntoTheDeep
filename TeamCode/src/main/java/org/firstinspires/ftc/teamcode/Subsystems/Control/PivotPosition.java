@@ -6,8 +6,11 @@ package org.firstinspires.ftc.teamcode.Subsystems.Control;
  * An enum to keep track of the positions we need the slide to be in regularly.
  */
 public enum PivotPosition {
-    UP(1),
-    DOWN(0);
+    DOWN(0),
+    BASKETLOW(0),
+    BASKETHIGH(0),
+    SUBMERSIBLELOW(0),
+    SUBMERSIBLEHIGH(0);
     public final int pos;
 
     PivotPosition(int pos) {
