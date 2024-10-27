@@ -98,20 +98,20 @@ public class Teleop extends LinearOpMode {
             // it gets the x and y positioning from the left stick and turns based on the right stick's x
             // calcMotorPowers creates a MotorGeneric
             MotorGeneric<Double> motorPowers;
-            if (robot.gamepad1.yButton.toggle) {
-                motorPowers = robot.drive.calcMotorPowers(robot.gamepad1.leftStickX * sensitivityHighPower, robot.gamepad1.leftStickY * sensitivityHighPower, robot.gamepad1.rightStickX * sensitivityHighPower);
+            if (Robot.gamepad1.yButton.toggle) {
+                motorPowers = robot.drive.calcMotorPowers(Robot.gamepad1.leftStickX * sensitivityHighPower, Robot.gamepad1.leftStickY * sensitivityHighPower, Robot.gamepad1.rightStickX * sensitivityHighPower);
             } else {
-                motorPowers = robot.drive.calcMotorPowers(robot.gamepad1.leftStickX * sensitivityLowPower, robot.gamepad1.leftStickY * sensitivityLowPower, robot.gamepad1.rightStickX * sensitivityLowPower);
+                motorPowers = robot.drive.calcMotorPowers(Robot.gamepad1.leftStickX * sensitivityLowPower, Robot.gamepad1.leftStickY * sensitivityLowPower, Robot.gamepad1.rightStickX * sensitivityLowPower);
             }
             robot.drive.setDrivePowers(motorPowers);
             // Switch to one gamepad
-            if (robot.gamepad1.xButton.isPressed() || robot.gamepad2.xButton.isPressed()) {
+            if (Robot.gamepad1.xButton.isPressed() || Robot.gamepad2.xButton.isPressed()) {
                 twoGamepads = !twoGamepads;
                 telemetry.log().add("Switching to " + (twoGamepads ? "two" : "one") + " gamepad mode");
             }
             if (twoGamepads) {
                 // Claw open/close - controlled by clicking b
-                if (robot.gamepad1.bButton.isPressed() || robot.gamepad2.bButton.isPressed()) {
+                if (Robot.gamepad1.bButton.isPressed() || Robot.gamepad2.bButton.isPressed()) {
                     if (clawOpen) {
                         robot.control.moveClaw(ClawPosition.CLOSE);
                         telemetry.log().add("Closing claw");
@@ -123,37 +123,37 @@ public class Teleop extends LinearOpMode {
                 }
 
                 // Scoring Position (4 pre-set positions)
-                if (robot.gamepad2.dPadUp.isPressed()) {
+                if (Robot.gamepad2.dPadUp.isPressed()) {
                     robot.control.moveArm(LinearSlidePosition.BASKETLOW, PivotPosition.BASKETLOW);
                     telemetry.log().add("Moving to basket low");
                 }
-                if (robot.gamepad2.dPadDown.isPressed()) {
+                if (Robot.gamepad2.dPadDown.isPressed()) {
                     robot.control.moveArm(LinearSlidePosition.BASKETHIGH, PivotPosition.BASKETHIGH);
                     telemetry.log().add("Moving to basket high");
                 }
-                if (robot.gamepad2.dPadRight.isPressed()) {
+                if (Robot.gamepad2.dPadRight.isPressed()) {
                     robot.control.moveArm(LinearSlidePosition.SUBMERSIBLELOW, PivotPosition.SUBMERSIBLELOW);
                     telemetry.log().add("Moving to submersible low");
                 }
-                if (robot.gamepad2.dPadLeft.isPressed()) {
+                if (Robot.gamepad2.dPadLeft.isPressed()) {
                     robot.control.moveArm(LinearSlidePosition.SUBMERSIBLEHIGH, PivotPosition.SUBMERSIBLEHIGH);
                     telemetry.log().add("Moving to submersible high");
                 }
-                if (robot.gamepad2.bButton.isPressed()) {
+                if (Robot.gamepad2.bButton.isPressed()) {
                     robot.control.moveArm(LinearSlidePosition.DOWN, PivotPosition.DOWN);
                     telemetry.log().add("Moving to down (reset position)");
                 }
 
 
                 // Adjust height (manual linear slide override)
-                if (robot.gamepad1.triggerLeft > 0.05) {
+                if (Robot.gamepad1.triggerLeft > 0.05) {
                     robot.control.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.control.linearSlide.setPower(-robot.gamepad1.triggerLeft);
+                    robot.control.linearSlide.setPower(-Robot.gamepad1.triggerLeft);
                 }
                 // Adjust height (manual linear slide override)
-                if (robot.gamepad1.triggerRight > 0.05) {
+                if (Robot.gamepad1.triggerRight > 0.05) {
                     robot.control.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.control.linearSlide.setPower(robot.gamepad1.triggerRight);
+                    robot.control.linearSlide.setPower(Robot.gamepad1.triggerRight);
                 }
             } else {
                 // TODO: single gamepad controls
