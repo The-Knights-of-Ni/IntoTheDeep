@@ -33,7 +33,7 @@ public class Vision extends Subsystem {
     final static double CAMERA_RIGHT_DISPLACEMENT = 0.0f * mmPerInch;
     private final HardwareMap hardwareMap;
     private final AllianceColor allianceColor;
-
+    private BarDetectionPipeline pipeline;
     public AprilTagDetectionThread aprilTagDetectionThread;
 
     private OpenCvCamera camera;
@@ -114,8 +114,8 @@ public class Vision extends Subsystem {
 
         // Create a detection pipeline for detecting the position
         // TODO: Create a detection pipeline for detecting the position
-//        pipeline = new [pipline name here]DetectionPipeline(allianceColor);
-//        camera.setPipeline(pipeline);
+        pipeline = new BarDetectionPipeline(allianceColor);
+        camera.setPipeline(pipeline);
 
         // Create listeners for the camera
         camera.openCameraDeviceAsync(

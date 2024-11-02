@@ -77,8 +77,8 @@ public class AprilTagDetectionThread extends Thread {
         //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
 
         // Choose whether LiveView stops if no processors are enabled.
-        // If set "true", the monitor shows a solid orange screen if no processors enabled.
         // If set "false", the monitor shows camera view without annotations.
+        // If set "true", the monitor shows a solid orange screen if no processors enabled.
         //builder.setAutoStopLiveView(false);
 
         // Set and enable the processor.
