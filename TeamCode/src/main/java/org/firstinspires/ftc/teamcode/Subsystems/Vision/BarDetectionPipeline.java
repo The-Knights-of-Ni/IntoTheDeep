@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
-import static java.lang.Math.max;
 
 import android.util.Log;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -63,7 +62,9 @@ public class BarDetectionPipeline extends OpenCvPipeline {
     private int markerLeftDetected = 0;
     private int markerMiddleDetected = 0;
     private int markerRightDetected = 0;
-
+    public double right_area = 0.0;
+    public double middle_area = 0.0;
+    public double left_area = 0.0;
     /**
      * Class instantiation
      *
@@ -97,9 +98,6 @@ public class BarDetectionPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         Log.v("MarkerDetectionPipeline", "Processing frame of size " + input.width() + "x" + input.height());
         var oldMarkerLocation = markerLocation;
-        if (input == null) {
-            return null;
-        }
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, (allianceColor == AllianceColor.RED) ? Imgproc.COLOR_BGR2HSV : Imgproc.COLOR_RGB2HSV);
 
@@ -137,9 +135,9 @@ public class BarDetectionPipeline extends OpenCvPipeline {
 
         for (int i = 0; i < contours.size(); i++) {
             if (contours.get(i).empty()) {
-                Log.w("MarkerDetectionPipeline", "Empty contour");
+                Log.w("BarDetectionPipeline", "Empty contour");
             } else if (contours.get(i) == null) {
-                Log.w("MarkerDetectionPipeline", "Null contour");
+                Log.w("BarDetectionPipeline", "Null contour");
             } else {
                 MatOfPoint2f tempContours = new MatOfPoint2f(contours.get(i).toArray());
                 // IMPORTANT: MatOfPoint2f will prob leak memory, may want to fix
@@ -159,9 +157,7 @@ public class BarDetectionPipeline extends OpenCvPipeline {
         double left_x = 0.3 * crop.width();
         double right_x = 0.7 * crop.width();
         var largest_area = 0.0;
-        double right_area = 0.0;
-        double middle_area = 0.0;
-        double left_area = 0.0;
+
 
         // Adult: Guess what this for loop is doing to the bounding box??
         for (int i = 0; i != boundRect.length; i++) {
@@ -180,6 +176,7 @@ public class BarDetectionPipeline extends OpenCvPipeline {
                 }
             }
         }
+
 //        largest_area = max(largest_area,max(max(right_area,left_area),middle_area));
         if (right_area > largest_area) {
              largest_area = right_area;
