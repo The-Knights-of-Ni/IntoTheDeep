@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Drive.Localizer.HolonomicLocali
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Localizer.MecanumLocalizer;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.PID;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.MotorEncoders;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimationMethodChoice;
 import org.firstinspires.ftc.teamcode.Util.Pose;
 import org.firstinspires.ftc.teamcode.Util.Vector;
@@ -77,5 +78,38 @@ class DriveTest {
 //        assertEquals(1, resp.frontRight);
 //        assertEquals(1, resp.rearLeft);
 //        assertEquals(1, resp.rearRight);
+    }
+
+    @Test
+    void deadReckoningTest() {
+        final double wheelDisplacePerEncoderCount = 0.1;
+        var currentMotorLocations =  new MotorGeneric<>(1000, 0, 0, -1000);
+        //Compute change in encoder positions
+        var deltaMotorLocations = new MotorGeneric<>(currentMotorLocations.frontLeft - 0, currentMotorLocations.frontRight - 0, currentMotorLocations.rearLeft - 0, currentMotorLocations.rearRight - 0);
+        //Compute displacements for each wheel
+        double displ_m0 = ((double) deltaMotorLocations.frontLeft) * wheelDisplacePerEncoderCount;
+        double displ_m1 = ((double) deltaMotorLocations.frontRight) * wheelDisplacePerEncoderCount;
+        double displ_m2 = ((double) deltaMotorLocations.rearLeft) * wheelDisplacePerEncoderCount;
+        double displ_m3 = ((double) deltaMotorLocations.rearRight) * wheelDisplacePerEncoderCount;
+
+        //Compute the average displacement in order to untangle rotation
+        //from displacment
+        var forward_back = (displ_m0 + displ_m1 + displ_m2 + displ_m3) / 4.0;
+        var strafe = (0 - displ_m1 - displ_m0 + displ_m2 + displ_m3) / 4.0;
+        double delta_theta = (deltaMotorLocations.frontRight + deltaMotorLocations.rearRight - deltaMotorLocations.frontLeft - deltaMotorLocations.rearLeft) / (457.2);
+        System.out.println(forward_back);
+        System.out.println(strafe);
+        System.out.println(delta_theta);
+
+        //Move this holonomic displacement from robot to field frame of reference
+        double robotTheta = delta_theta;  //Just make the accessor call once
+        double delt_Xf = (forward_back * Math.cos(robotTheta) - strafe * Math.sin(robotTheta));
+        double delt_Yf = (forward_back * Math.sin(robotTheta) + strafe * Math.cos(robotTheta));
+
+        //Update the position
+        var pose = new Pose(delt_Xf, delt_Yf, delta_theta);
+
+        System.out.println(pose.toString());
+
     }
 }
