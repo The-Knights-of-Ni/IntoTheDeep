@@ -13,15 +13,19 @@ import org.firstinspires.ftc.teamcode.Util.ServoEx;
  * Control subsystem for controlling arms and claws
  */
 public class Control extends Subsystem {
-    public final ServoEx claw; //The servo that controls the claw
+    public final ServoEx scoringClaw; //The servo that controls the claw
+    public final ServoEx intakeClaw; //The servo that controls the intake claw
+    public final ServoEx intake; //The servo that controls the intake
     public final ServoEx pivot; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, DcMotorEx linearSlideMotor) {
+    public Control(Telemetry telemetry, Servo intake, Servo scoringClawMotor, Servo intakeClawMotor, Servo pivotMotor, DcMotorEx linearSlideMotor) {
         super(telemetry, "control");
 
         // Initializing instance variables
-        this.claw = (ServoEx) clawMotor;
+        this.scoringClaw = (ServoEx) scoringClawMotor;
+        this.intakeClaw = (ServoEx) intakeClawMotor;
+        this.intake = (ServoEx) intake;
         this.pivot = (ServoEx) pivotMotor;
         this.linearSlide = linearSlideMotor;
     }
@@ -43,14 +47,14 @@ public class Control extends Subsystem {
     }
 
 
-    public void moveClaw(ClawPosition newPosition) {
-        claw.turnToAngle(newPosition.pos);
+    public void moveScoringClaw(ClawPosition newPosition) {
+        scoringClaw.turnToAngle(newPosition.pos);
     }
 
-    public void moveClawSync(ClawPosition newPosition) {
-        moveClaw(newPosition);
+    public void moveScoringClawSync(ClawPosition newPosition) {
+        moveScoringClaw(newPosition);
         // Angles are all in degrees
-        while (Math.abs(claw.getAngle() - newPosition.pos) > 20) {
+        while (Math.abs(scoringClaw.getAngle() - newPosition.pos) > 20) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -64,8 +68,8 @@ public class Control extends Subsystem {
      * Does not wait for the claw action to finish opening before terminating the method and
      * allowing other functions to begin.
      */
-    public void openClaw() {
-        moveClaw(ClawPosition.OPEN);
+    public void openScoringClaw() {
+        moveScoringClaw(ClawPosition.OPEN);
     }
 
     /**
@@ -73,8 +77,8 @@ public class Control extends Subsystem {
      * Does not wait for the claw action to finish opening before terminating the method and
      * allowing other functions to begin.
      */
-    public void closeClaw() {
-        moveClaw(ClawPosition.CLOSE);
+    public void closeScoringClaw() {
+        moveScoringClaw(ClawPosition.CLOSE);
     }
 
     /**
@@ -82,8 +86,8 @@ public class Control extends Subsystem {
      * The method will not terminate until the claw is fully open, meaning that only the action
      * of the claw opening can be occurring at the given time.
      */
-    public void openClawSync() {
-        moveClawSync(ClawPosition.OPEN);
+    public void openScoringClawSync() {
+        moveScoringClawSync(ClawPosition.OPEN);
     }
 
     /**
@@ -91,8 +95,56 @@ public class Control extends Subsystem {
      * The method will not terminate until the claw is fully closed, meaning that only the action
      * of the claw closing can be occurring at the given time.
      */
-    public void closeClawSync() {
-        moveClawSync(ClawPosition.CLOSE);
+    public void closeScoringClawSync() {
+        moveScoringClawSync(ClawPosition.CLOSE);
+    }
+
+    public void moveIntakeClaw(ClawPosition newPosition) {
+        intakeClaw.setPosition(newPosition.pos);
+    }
+
+    public void moveIntakeClawSync(ClawPosition newPosition) {
+        moveIntakeClaw(newPosition);
+        while (Math.abs(intakeClaw.getPosition() - newPosition.pos) > 0.05) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                /*See note on InterruptedException above*/
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void openIntakeClaw() {
+        moveIntakeClaw(ClawPosition.OPEN);
+    }
+
+    public void closeIntakeClaw() {
+        moveIntakeClaw(ClawPosition.CLOSE);
+    }
+
+    public void openIntakeClawSync() {
+        moveIntakeClawSync(ClawPosition.OPEN);
+    }
+
+    public void closeIntakeClawSync() {
+        moveIntakeClawSync(ClawPosition.CLOSE);
+    }
+
+    public void moveIntake(IntakePosition newPosition) {
+        intakeClaw.setPosition(newPosition.pos);
+    }
+
+    public void moveIntakeSync(IntakePosition newPosition) {
+        moveIntake(newPosition);
+        while (Math.abs(intake.getPosition() - newPosition.pos) > 0.05) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                /*See note on InterruptedException above*/
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -102,7 +154,7 @@ public class Control extends Subsystem {
      * @param newPosition The position to move the pivot to
      */
     public void movePivot(PivotPosition newPosition) {
-        claw.setPosition(newPosition.pos);
+        scoringClaw.setPosition(newPosition.pos);
     }
 
     /**
@@ -113,7 +165,7 @@ public class Control extends Subsystem {
      */
     public void movePivotSync(PivotPosition newPosition) {
         movePivot(newPosition);
-        while (Math.abs(claw.getPosition() - newPosition.pos) > 0.05) {
+        while (Math.abs(scoringClaw.getPosition() - newPosition.pos) > 0.05) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
