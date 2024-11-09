@@ -4,6 +4,7 @@ import android.util.Log;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -65,6 +66,14 @@ public class BarDetectionPipeline extends OpenCvPipeline {
     public double right_area = 0.0;
     public double middle_area = 0.0;
     public double left_area = 0.0;
+    public double center_red_value = 0.0;
+    public double center_green_value = 0.0;
+    public double center_blue_value = 0.0;
+    public double center_hue = 0.0;
+    public double center_saturation = 0.0;
+    public double center_value = 0.0;
+    public int area = 0;
+
     /**
      * Class instantiation
      *
@@ -96,10 +105,20 @@ public class BarDetectionPipeline extends OpenCvPipeline {
      * @see MarkerLocation
      */
     public Mat processFrame(Mat input) {
+        /*
+        input.width()
+        // input.get(y,x)[0] --> Red channel, ...
+        */
+        center_red_value = input.get(input.height()/2,input.width()/2)[0];
+        center_green_value = input.get(input.height()/2,input.width()/2)[1];
+        center_blue_value = input.get(input.height()/2,input.width()/2)[2];
         Log.v("MarkerDetectionPipeline", "Processing frame of size " + input.width() + "x" + input.height());
         var oldMarkerLocation = markerLocation;
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, (allianceColor == AllianceColor.RED) ? Imgproc.COLOR_BGR2HSV : Imgproc.COLOR_RGB2HSV);
+        center_hue = mask.get(input.height()/2,input.width()/2)[0];
+        center_saturation = mask.get(input.height()/2,input.width()/2)[1];
+        center_value = mask.get(input.height()/2,input.width()/2)[2];
 
         Rect rectCrop = new Rect(0, 0, mask.width(), mask.height());
         Mat crop = new Mat(mask, rectCrop);
@@ -112,17 +131,26 @@ public class BarDetectionPipeline extends OpenCvPipeline {
         Scalar lowHSV;
         Scalar highHSV;
         if (allianceColor == AllianceColor.RED) {
-            lowHSV = new Scalar(0.0, 0.0, 0.0);
-            highHSV = new Scalar(255.0, 255.0, 255.0);
+            // Range for red bar, semi-accurate but detects non-bar objects
+            lowHSV = new Scalar(110.0, 140.0, 100.0);
+            highHSV = new Scalar(160.0, 255.0, 255.0);
         } else {
             // Default to blue
-            lowHSV = new Scalar(0.0, 0.0, 0.0);
-            highHSV = new Scalar(255.0, 255.0, 255.0);
+            // Blue 3D printed thingy range bc the real bar is connected to something else
+            lowHSV = new Scalar(99.0, 230.0, 210.0);
+            highHSV = new Scalar(110.0, 255.0, 255.0);
         }
         Mat thresh = new Mat(); // Passed in by reference and is teh result just poorly named
 
+        // thres(x,y) would be true if crop(x,y) value is between low and high
         Core.inRange(crop, lowHSV, highHSV, thresh);
-
+        int local_area = 0; // Area of stuff in the range
+        for(int i = 0; i<thresh.width(); i+=10){
+            for(int j = 0; j<thresh.height(); j+=10){
+                if(thresh.get(j,i)[0] == 255.0) local_area++;
+            }
+        }
+        area = local_area; // area variable is global and logged for debug
         Mat edges = new Mat();
         Imgproc.Canny(thresh, edges, 100, 300);
 //        thresh.release();

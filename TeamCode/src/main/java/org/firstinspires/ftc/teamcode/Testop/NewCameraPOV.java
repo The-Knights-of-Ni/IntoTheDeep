@@ -90,13 +90,20 @@ public class NewCameraPOV extends LinearOpMode {
              * Send some stats to the telemetry
              */
             telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
-            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
-            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+//            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
+//            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
+//            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
+//            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
+//            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
             // telemetry.addData("Camera Size", "j");
-            telemetry.addData("Left Area", pipeline.left_area);
+//            telemetry.addData("Left Area: ", pipeline.left_area);
+//            telemetry.addData("Center red: ", pipeline.center_red_value);
+//            telemetry.addData("Center green: ", pipeline.center_green_value);
+//            telemetry.addData("Center blue: ", pipeline.center_blue_value);
+            telemetry.addData("Center hue: ", pipeline.center_hue);
+            telemetry.addData("Center saturation: ", pipeline.center_saturation);
+            telemetry.addData("Center value: ", pipeline.center_value);
+            telemetry.addData("Area: ", pipeline.area);
             telemetry.update();
 
             /*
