@@ -104,6 +104,8 @@ public class NewCameraPOV extends LinearOpMode {
             telemetry.addData("Center saturation: ", pipeline.center_saturation);
             telemetry.addData("Center value: ", pipeline.center_value);
             telemetry.addData("Area: ", pipeline.area);
+            telemetry.addData("Avgx: ", pipeline.x2);
+            telemetry.addData("Avgy: ", pipeline.y2);
             telemetry.update();
 
             /*

@@ -73,7 +73,8 @@ public class BarDetectionPipeline extends OpenCvPipeline {
     public double center_saturation = 0.0;
     public double center_value = 0.0;
     public int area = 0;
-
+    public double x2=0;
+    public double y2=0;
     /**
      * Class instantiation
      *
@@ -132,24 +133,35 @@ public class BarDetectionPipeline extends OpenCvPipeline {
         Scalar highHSV;
         if (allianceColor == AllianceColor.RED) {
             // Range for red bar, semi-accurate but detects non-bar objects
-            lowHSV = new Scalar(110.0, 140.0, 100.0);
-            highHSV = new Scalar(160.0, 255.0, 255.0);
+            lowHSV = new Scalar(110.0, 140.0, 140.0);
+            highHSV = new Scalar(130.0, 230.0, 255.0);
         } else {
             // Default to blue
             // Blue 3D printed thingy range bc the real bar is connected to something else
-            lowHSV = new Scalar(99.0, 230.0, 210.0);
-            highHSV = new Scalar(110.0, 255.0, 255.0);
+            lowHSV = new Scalar(10.0, 230.0, 100.0);
+            highHSV = new Scalar(20.0, 255.0, 255.0);
         }
         Mat thresh = new Mat(); // Passed in by reference and is teh result just poorly named
 
         // thres(x,y) would be true if crop(x,y) value is between low and high
         Core.inRange(crop, lowHSV, highHSV, thresh);
         int local_area = 0; // Area of stuff in the range
+        double x=0;
+        double y=0;
+        double sum=0;
         for(int i = 0; i<thresh.width(); i+=10){
             for(int j = 0; j<thresh.height(); j+=10){
-                if(thresh.get(j,i)[0] == 255.0) local_area++;
+                if(thresh.get(j,i)[0] == 255.0) {
+                    local_area++;
+                    x+=(double)i;
+                    y+=(double)j;
+                }
             }
         }
+        x=(double)x/(double)local_area;
+        y=(double)y/(double)local_area;
+        x2=x;
+        y2=y;
         area = local_area; // area variable is global and logged for debug
         Mat edges = new Mat();
         Imgproc.Canny(thresh, edges, 100, 300);
