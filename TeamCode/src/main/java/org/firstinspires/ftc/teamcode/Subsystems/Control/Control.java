@@ -210,6 +210,3 @@ public class Control extends Subsystem {
         movePivot(pivotPosition);
     }
 }
-
-
-}
