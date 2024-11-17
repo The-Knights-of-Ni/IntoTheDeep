@@ -109,16 +109,16 @@ public class BarDetectionPipeline extends OpenCvPipeline {
         input.width()
         // input.get(y,x)[0] --> Red channel, ...
         */
-        center_red_value = input.get(input.height()/2,input.width()/2)[0];
-        center_green_value = input.get(input.height()/2,input.width()/2)[1];
-        center_blue_value = input.get(input.height()/2,input.width()/2)[2];
+        center_red_value = input.get(input.height() / 2, input.width() / 2)[0];
+        center_green_value = input.get(input.height() / 2, input.width() / 2)[1];
+        center_blue_value = input.get(input.height() / 2, input.width() / 2)[2];
         Log.v("MarkerDetectionPipeline", "Processing frame of size " + input.width() + "x" + input.height());
         var oldMarkerLocation = markerLocation;
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, (allianceColor == AllianceColor.RED) ? Imgproc.COLOR_BGR2HSV : Imgproc.COLOR_RGB2HSV);
-        center_hue = mask.get(input.height()/2,input.width()/2)[0];
-        center_saturation = mask.get(input.height()/2,input.width()/2)[1];
-        center_value = mask.get(input.height()/2,input.width()/2)[2];
+        center_hue = mask.get(input.height() / 2, input.width() / 2)[0];
+        center_saturation = mask.get(input.height() / 2, input.width() / 2)[1];
+        center_value = mask.get(input.height() / 2, input.width() / 2)[2];
 
         Rect rectCrop = new Rect(0, 0, mask.width(), mask.height());
         Mat crop = new Mat(mask, rectCrop);
@@ -145,9 +145,9 @@ public class BarDetectionPipeline extends OpenCvPipeline {
         // thres(x,y) would be true if crop(x,y) value is between low and high
         Core.inRange(crop, lowHSV, highHSV, thresh);
         int local_area = 0; // Area of stuff in the range
-        for(int i = 0; i<thresh.width(); i+=10){
-            for(int j = 0; j<thresh.height(); j+=10){
-                if(thresh.get(j,i)[0] == 255.0) local_area++;
+        for (int i = 0; i < thresh.width(); i += 10) {
+            for (int j = 0; j < thresh.height(); j += 10) {
+                if (thresh.get(j, i)[0] == 255.0) local_area++;
             }
         }
         area = local_area; // area variable is global and logged for debug
@@ -195,11 +195,9 @@ public class BarDetectionPipeline extends OpenCvPipeline {
                 System.out.println(midpoint);
                 if (midpoint < left_x) {
                     left_area += area;
-                }
-                else if (left_x <= midpoint && midpoint <= right_x) {
+                } else if (left_x <= midpoint && midpoint <= right_x) {
                     middle_area += area;
-                }
-                else if (right_x < midpoint) {
+                } else if (right_x < midpoint) {
                     right_area += area;
                 }
             }
@@ -207,15 +205,15 @@ public class BarDetectionPipeline extends OpenCvPipeline {
 
 //        largest_area = max(largest_area,max(max(right_area,left_area),middle_area));
         if (right_area > largest_area) {
-             largest_area = right_area;
+            largest_area = right_area;
             markerLocation = MarkerLocation.RIGHT;
         }
         if (middle_area > largest_area) {
-             largest_area = middle_area;
+            largest_area = middle_area;
             markerLocation = MarkerLocation.MIDDLE;
         }
         if (left_area > largest_area) {
-             largest_area = left_area;
+            largest_area = left_area;
             markerLocation = MarkerLocation.LEFT;
         }
 
@@ -234,7 +232,10 @@ public class BarDetectionPipeline extends OpenCvPipeline {
         }
 
         // Adult: Clean up.
-        for(int i = 0; i<contours.size(); i++){ contours.get(i).release(); contoursPoly[i].release(); }
+        for (int i = 0; i < contours.size(); i++) {
+            contours.get(i).release();
+            contoursPoly[i].release();
+        }
 
         hierarchy.release();
         edges.release();
@@ -252,7 +253,6 @@ public class BarDetectionPipeline extends OpenCvPipeline {
      *
      * @return Where the marker is.
      * @see MarkerLocation
-     *
      */
     public MarkerLocation getMarkerLocation() {
         MarkerLocation mostDetected = MarkerLocation.NOT_FOUND;
