@@ -7,19 +7,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
+import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.BarDetectionPipeline;
 
 @TeleOp(name = "NewCameraPOV", group = "Concept")
 public class NewCameraPOV extends LinearOpMode {
     OpenCvWebcam webcam;
 
-    public static final int CAMERA_WIDTH = 1920; // width of wanted camera resolution
-    public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
+//    public static final int CAMERA_WIDTH = 1920; // width of wanted camera resolution
+//    public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
 
-//    MarkerDetectionPipeline pipeline = new MarkerDetectionPipeline(AllianceColor.RED);
+    BarDetectionPipeline pipeline = new BarDetectionPipeline(AllianceColor.RED);
 
     @Override
     public void runOpMode() {
@@ -42,7 +44,7 @@ public class NewCameraPOV extends LinearOpMode {
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-
+        webcam.setPipeline(pipeline);
         // OR...  Do Not Activate the Camera Monitor View
         //webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
 
@@ -53,7 +55,8 @@ public class NewCameraPOV extends LinearOpMode {
          *
          * If you really want to open synchronously, the old method is still available.
          */
-        webcam.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
+        webcam.setMillisecondsPermissionTimeout(5000);
+        // Timeout for obtaining permission is configurable. Set before opening.
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -87,12 +90,20 @@ public class NewCameraPOV extends LinearOpMode {
              * Send some stats to the telemetry
              */
             telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
-            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
-            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
-            telemetry.addData("Camera Size", "j");
+//            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
+//            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
+//            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
+//            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
+//            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+            // telemetry.addData("Camera Size", "j");
+//            telemetry.addData("Left Area: ", pipeline.left_area);
+//            telemetry.addData("Center red: ", pipeline.center_red_value);
+//            telemetry.addData("Center green: ", pipeline.center_green_value);
+//            telemetry.addData("Center blue: ", pipeline.center_blue_value);
+            telemetry.addData("Center hue: ", pipeline.center_hue);
+            telemetry.addData("Center saturation: ", pipeline.center_saturation);
+            telemetry.addData("Center value: ", pipeline.center_value);
+            telemetry.addData("Area: ", pipeline.area);
             telemetry.update();
 
             /*

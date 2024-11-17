@@ -21,7 +21,7 @@ public class Pose {
     }
 
     public boolean fuzzyCompare(Pose other, int distanceThreshold, int angleThreshold) {
-        return Math.abs(x - other.x) < distanceThreshold && Math.abs(y - other.y) < distanceThreshold && Math.abs(heading - other.heading) < 5;
+        return Math.abs(x - other.x) < distanceThreshold && Math.abs(y - other.y) < distanceThreshold && Math.abs(heading - other.heading) < angleThreshold;
     }
 
     public boolean fuzzyCompare(Pose other) {
