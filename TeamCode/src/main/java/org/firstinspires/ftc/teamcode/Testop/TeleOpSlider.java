@@ -20,7 +20,7 @@ public class TeleOpSlider extends LinearOpMode {
 
         // set left slider motor and right slider motor, they need to be opposite
         sl.setDirection(DcMotorSimple.Direction.REVERSE);
-        sr.setDirection(DcMotorSimple.Direction.FORWARD);
+        sr.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -29,16 +29,16 @@ public class TeleOpSlider extends LinearOpMode {
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y;
 
-            List<DcMotor> motors = Arrays.asList(sl, sr);
-            motors.parallelStream().forEach(motor -> {
-                // Execute the command
-                telemetry.addData(">", "Starting thread..." );
-                telemetry.update();
-                motor.setPower(y);
-            });
+//            List<DcMotor> motors = Arrays.asList(sl, sr);
+//            motors.parallelStream().forEach(motor -> {
+//                // Execute the command
+//                telemetry.addData(">", "Starting thread..." );
+//                telemetry.update();
+//                motor.setPower(y);
+//            });
 
-//            sl.setPower(y);
-//            sr.setPower(y);
+            sl.setPower(y);
+            sr.setPower(y);
         }
     }
 }
