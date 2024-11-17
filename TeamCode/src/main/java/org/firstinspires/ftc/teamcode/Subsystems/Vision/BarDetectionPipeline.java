@@ -59,20 +59,7 @@ Stuff I gotta do:
 
 public class BarDetectionPipeline extends OpenCvPipeline {
     private final AllianceColor allianceColor;
-    private MarkerLocation markerLocation = MarkerLocation.NOT_FOUND;
-    private int markerLeftDetected = 0;
-    private int markerMiddleDetected = 0;
-    private int markerRightDetected = 0;
-    public double right_area = 0.0;
-    public double middle_area = 0.0;
-    public double left_area = 0.0;
-    public double center_red_value = 0.0;
-    public double center_green_value = 0.0;
-    public double center_blue_value = 0.0;
-    public double center_hue = 0.0;
-    public double center_saturation = 0.0;
-    public double center_value = 0.0;
-    public int area = 0;
+    private Rect boundingBox;
 
     /**
      * Class instantiation
@@ -82,52 +69,23 @@ public class BarDetectionPipeline extends OpenCvPipeline {
      */
     public BarDetectionPipeline(AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
+        this.boundingBox = null;
     }
 
-    /**
-     * This method detects where the marker is.
-     *
-     * <p>It does this by splitting the camera input into left, right, and middle rectangles, these
-     * rectangles need to be calibrated. Combined, they do not have to encompass the whole camera
-     * input, they probably will only check a small part of it. We then assume the alliance color is
-     * either (255, 0, 0) or (0, 0, 255), we get the info when the object is instantiated ({@link
-     * #allianceColor}), and that the marker color is (0, 255, 0), which is a bright green ({@link
-     * Scalar}'s are used for colors). We compare the marker color with the alliance color on each of
-     * the rectangles, if the marker color is on none or multiple of them, it is marked as {@link
-     * MarkerLocation#NOT_FOUND}, if otherwise, the respective Location it is in is returned via a
-     * {@link MarkerLocation} variable called {@link #markerLocation}
-     *
-     * @param input A Mask (the class is called {@link Mat})
-     * @return The marker location
-     * @see BarDetectionPipeline#allianceColor
-     * @see Mat
-     * @see Scalar
-     * @see MarkerLocation
-     */
     public Mat processFrame(Mat input) {
-        /*
-        input.width()
-        // input.get(y,x)[0] --> Red channel, ...
-        */
-        center_red_value = input.get(input.height() / 2, input.width() / 2)[0];
-        center_green_value = input.get(input.height() / 2, input.width() / 2)[1];
-        center_blue_value = input.get(input.height() / 2, input.width() / 2)[2];
         Log.v("MarkerDetectionPipeline", "Processing frame of size " + input.width() + "x" + input.height());
-        var oldMarkerLocation = markerLocation;
-        Mat mask = new Mat();
+        var mask = new Mat();
+        // TODO: ensure coloring schem matches with calibrator
         Imgproc.cvtColor(input, mask, (allianceColor == AllianceColor.RED) ? Imgproc.COLOR_BGR2HSV : Imgproc.COLOR_RGB2HSV);
-        center_hue = mask.get(input.height() / 2, input.width() / 2)[0];
-        center_saturation = mask.get(input.height() / 2, input.width() / 2)[1];
-        center_value = mask.get(input.height() / 2, input.width() / 2)[2];
-
+        // TODO: decide on proper crop
         Rect rectCrop = new Rect(0, 0, mask.width(), mask.height());
         Mat crop = new Mat(mask, rectCrop);
         mask.release();
 
         if (crop.empty()) {
-            markerLocation = MarkerLocation.NOT_FOUND;
             return input;
         }
+        // TODO: Calibrate these values
         Scalar lowHSV;
         Scalar highHSV;
         if (allianceColor == AllianceColor.RED) {
@@ -140,139 +98,45 @@ public class BarDetectionPipeline extends OpenCvPipeline {
             lowHSV = new Scalar(99.0, 230.0, 210.0);
             highHSV = new Scalar(110.0, 255.0, 255.0);
         }
-        Mat thresh = new Mat(); // Passed in by reference and is teh result just poorly named
+        Mat threshImage = new Mat();
 
         // thres(x,y) would be true if crop(x,y) value is between low and high
-        Core.inRange(crop, lowHSV, highHSV, thresh);
-        int local_area = 0; // Area of stuff in the range
-        for (int i = 0; i < thresh.width(); i += 10) {
-            for (int j = 0; j < thresh.height(); j += 10) {
-                if (thresh.get(j, i)[0] == 255.0) local_area++;
-            }
-        }
-        area = local_area; // area variable is global and logged for debug
-        Mat edges = new Mat();
-        Imgproc.Canny(thresh, edges, 100, 300);
-//        thresh.release();
+        Core.inRange(crop, lowHSV, highHSV, threshImage);
+
+        // Find contours
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(threshImage, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contours.size()];
         Rect[] boundRect = new Rect[contours.size()];
+        Point[] centers = new Point[contours.size()];
+        float[][] radius = new float[contours.size()][1];
 
         for (int i = 0; i < contours.size(); i++) {
-            if (contours.get(i).empty()) {
-                Log.w("BarDetectionPipeline", "Empty contour");
-            } else if (contours.get(i) == null) {
-                Log.w("BarDetectionPipeline", "Null contour");
-            } else {
-                MatOfPoint2f tempContours = new MatOfPoint2f(contours.get(i).toArray());
-                // IMPORTANT: MatOfPoint2f will prob leak memory, may want to fix
-                contoursPoly[i] = new MatOfPoint2f();
-                Imgproc.approxPolyDP(tempContours, contoursPoly[i], 3, true);
-                MatOfPoint rectContours = new MatOfPoint(contoursPoly[i].toArray());
-                boundRect[i] = Imgproc.boundingRect(rectContours);
-//            Imgproc.contourArea(contoursPoly[i]); // TODO Maybe implement contour area check for next tourney
-                tempContours.release();
-                rectContours.release();
+            contoursPoly[i] = new MatOfPoint2f();
+            Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
+            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+            centers[i] = new Point();
+            Imgproc.minEnclosingCircle(contoursPoly[i], centers[i], radius[i]);
+        }
+
+        // Find the largest bounding rectangle by area
+        double maxArea = 0;
+        Rect maxRect = null;
+        for (Rect rect : boundRect) {
+            double area = rect.area();
+            if (area > maxArea) {
+                maxArea = area;
+                maxRect = rect;
             }
         }
 
-
-        System.out.println(Arrays.toString(boundRect));
-
-        double left_x = 0.3 * crop.width();
-        double right_x = 0.7 * crop.width();
-        var largest_area = 0.0;
-
-
-        // Adult: Guess what this for loop is doing to the bounding box??
-        for (int i = 0; i != boundRect.length; i++) {
-            if (boundRect[i] != null) {
-                double area = boundRect[i].area();
-                int midpoint = boundRect[i].width + boundRect[i].x / 2;
-                System.out.println(midpoint);
-                if (midpoint < left_x) {
-                    left_area += area;
-                } else if (left_x <= midpoint && midpoint <= right_x) {
-                    middle_area += area;
-                } else if (right_x < midpoint) {
-                    right_area += area;
-                }
-            }
-        }
-
-//        largest_area = max(largest_area,max(max(right_area,left_area),middle_area));
-        if (right_area > largest_area) {
-            largest_area = right_area;
-            markerLocation = MarkerLocation.RIGHT;
-        }
-        if (middle_area > largest_area) {
-            largest_area = middle_area;
-            markerLocation = MarkerLocation.MIDDLE;
-        }
-        if (left_area > largest_area) {
-            largest_area = left_area;
-            markerLocation = MarkerLocation.LEFT;
-        }
-
-        switch (markerLocation) {
-            case LEFT:
-                markerLeftDetected++;
-                break;
-            case MIDDLE:
-                markerMiddleDetected++;
-                break;
-            case RIGHT:
-                markerRightDetected++;
-                break;
-            default:
-                break;
-        }
-
-        // Adult: Clean up.
-        for (int i = 0; i < contours.size(); i++) {
-            contours.get(i).release();
-            contoursPoly[i].release();
-        }
-
-        hierarchy.release();
-        edges.release();
-        crop.release();
-
-        if (oldMarkerLocation != markerLocation) {
-            Log.i("MarkerDetectionPipeline", "Marker Location: " + markerLocation.name());
-        }
-
-        return thresh;
+        boundingBox = maxRect;
+        return threshImage;
     }
 
-    /**
-     * Gets the Marker Location, might be not found because of the Search Status.
-     *
-     * @return Where the marker is.
-     * @see MarkerLocation
-     */
-    public MarkerLocation getMarkerLocation() {
-        MarkerLocation mostDetected = MarkerLocation.NOT_FOUND;
-        int mostDetectedCount = 0;
-        if (markerLeftDetected > mostDetectedCount) {
-            mostDetectedCount = markerLeftDetected;
-            mostDetected = MarkerLocation.LEFT;
-        }
-        if (markerMiddleDetected > mostDetectedCount) {
-            mostDetectedCount = markerMiddleDetected;
-            mostDetected = MarkerLocation.MIDDLE;
-        }
-        if (markerRightDetected > mostDetectedCount) {
-            mostDetectedCount = markerRightDetected;
-            mostDetected = MarkerLocation.RIGHT;
-        }
-        return mostDetected;
-    }
-
-    public enum MarkerLocation {
-        LEFT, MIDDLE, RIGHT, NOT_FOUND
+    public Rect getMarkerLocation() {
+        return boundingBox;
     }
 }
