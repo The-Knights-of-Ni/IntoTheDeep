@@ -15,15 +15,19 @@ import org.firstinspires.ftc.teamcode.Util.ServoEx;
 public class Control extends Subsystem {
     public final ServoEx claw; //The servo that controls the claw
     public final ServoEx pivot; //The Servo that controls the pivot
+    public final ServoEx pivot2; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
+    public final DcMotorEx linearSlide2;
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, DcMotorEx linearSlideMotor) {
+    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
         super(telemetry, "control");
 
         // Initializing instance variables
         this.claw = (ServoEx) clawMotor;
         this.pivot = (ServoEx) pivotMotor;
+        this.pivot2 = (ServoEx) pivotMotor2;
         this.linearSlide = linearSlideMotor;
+        this.linearSlide2 = linearSlideMotor2;
     }
 
     /**
@@ -32,6 +36,8 @@ public class Control extends Subsystem {
     public void initDevicesAuto() {
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
@@ -40,6 +46,8 @@ public class Control extends Subsystem {
     public void initDevicesTeleop() {
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -102,7 +110,8 @@ public class Control extends Subsystem {
      * @param newPosition The position to move the pivot to
      */
     public void movePivot(PivotPosition newPosition) {
-        claw.setPosition(newPosition.pos);
+        pivot.setPosition(newPosition.pos);
+        pivot2.setPosition(newPosition.pos);
     }
 
     /**
@@ -113,7 +122,7 @@ public class Control extends Subsystem {
      */
     public void movePivotSync(PivotPosition newPosition) {
         movePivot(newPosition);
-        while (Math.abs(claw.getPosition() - newPosition.pos) > 0.05) {
+        while (Math.abs(pivot.getPosition() - newPosition.pos) > 0.05 && Math.abs(pivot2.getPosition() - newPosition.pos) > 0.05) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -125,12 +134,15 @@ public class Control extends Subsystem {
 
     public void moveLinearSlide(LinearSlidePosition newPosition) {
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setTargetPosition(newPosition.pos);
+        linearSlide2.setTargetPosition(newPosition.pos);
+
     }
 
     public void moveLinearSlideSync(LinearSlidePosition newPosition) {
         moveLinearSlide(newPosition);
-        while (Math.abs(linearSlide.getCurrentPosition() - newPosition.pos) > 25) {
+        while ((Math.abs(linearSlide.getCurrentPosition() - newPosition.pos) > 25) && (Math.abs(linearSlide2.getCurrentPosition() - newPosition.pos) > 25)) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
