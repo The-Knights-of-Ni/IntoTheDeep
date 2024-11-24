@@ -17,10 +17,10 @@ public class Control extends Subsystem {
     public final ServoEx pivot; //The Servo that controls the pivot
     public final ServoEx pivot2; //The Servo that controls the pivot
     public final ServoEx pivotUChannel;
-    public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
-    public final DcMotorEx linearSlide2;
+    public final DcMotorEx viperSlide; //The DcMotorEx that controls the linear slide
+    public final DcMotorEx viperSlide2;
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, Servo pivotUChannel, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
+    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, Servo pivotUChannel, DcMotorEx viperSlideMotor, DcMotorEx viperSlideMotor2) {
         super(telemetry, "control");
 
         // Initializing instance variables
@@ -28,28 +28,28 @@ public class Control extends Subsystem {
         this.pivot = (ServoEx) pivotMotor;
         this.pivot2 = (ServoEx) pivotMotor2;
         this.pivotUChannel=(ServoEx) pivotUChannel;
-        this.linearSlide = linearSlideMotor;
-        this.linearSlide2 = linearSlideMotor2;
+        this.viperSlide = viperSlideMotor;
+        this.viperSlide2 = viperSlideMotor2;
     }
 
     /**
      * Gets all defaults, directions, etc. ready for the autonomous period
      */
     public void initDevicesAuto() {
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        viperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        viperSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        viperSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        viperSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
      * Gets all defaults, directions, etc. ready for the teleop period
      */
     public void initDevicesTeleop() {
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        viperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        viperSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        viperSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        viperSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -114,7 +114,6 @@ public class Control extends Subsystem {
     public void movePivot(PivotPosition newPosition) {
         pivot.setPosition(newPosition.pos);
         pivot2.setPosition(newPosition.pos);
-        pivotUChannel.setPosition(newPosition.pos);
     }
 
     /**
@@ -135,17 +134,17 @@ public class Control extends Subsystem {
         }
     }
 
-    public void moveLinearSlide(LinearSlidePosition newPosition) {
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setTargetPosition(newPosition.pos);
-        linearSlide2.setTargetPosition(newPosition.pos);
+    public void moveviperSlide(LinearSlidePosition newPosition) {
+        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperSlide.setTargetPosition(newPosition.pos);
+        viperSlide2.setTargetPosition(newPosition.pos);
 
     }
 
-    public void moveLinearSlideSync(LinearSlidePosition newPosition) {
-        moveLinearSlide(newPosition);
-        while ((Math.abs(linearSlide.getCurrentPosition() - newPosition.pos) > 25) && (Math.abs(linearSlide2.getCurrentPosition() - newPosition.pos) > 25)) {
+    public void moveviperSlideSync(LinearSlidePosition newPosition) {
+        moveviperSlide(newPosition);
+        while ((Math.abs(viperSlide.getCurrentPosition() - newPosition.pos) > 25) && (Math.abs(viperSlide2.getCurrentPosition() - newPosition.pos) > 25)) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -156,7 +155,7 @@ public class Control extends Subsystem {
     }
 
     public void moveArm(LinearSlidePosition slidePosition, PivotPosition pivotPosition) {
-        moveLinearSlide(slidePosition);
+        moveviperSlide(slidePosition);
         movePivot(pivotPosition);
     }
 }
