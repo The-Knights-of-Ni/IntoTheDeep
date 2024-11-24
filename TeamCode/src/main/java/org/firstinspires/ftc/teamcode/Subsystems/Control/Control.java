@@ -16,16 +16,18 @@ public class Control extends Subsystem {
     public final ServoEx claw; //The servo that controls the claw
     public final ServoEx pivot; //The Servo that controls the pivot
     public final ServoEx pivot2; //The Servo that controls the pivot
+    public final ServoEx pivotUChannel;
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
     public final DcMotorEx linearSlide2;
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
+    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, Servo pivotUChannel, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
         super(telemetry, "control");
 
         // Initializing instance variables
         this.claw = (ServoEx) clawMotor;
         this.pivot = (ServoEx) pivotMotor;
         this.pivot2 = (ServoEx) pivotMotor2;
+        this.pivotUChannel=(ServoEx) pivotUChannel;
         this.linearSlide = linearSlideMotor;
         this.linearSlide2 = linearSlideMotor2;
     }
@@ -112,6 +114,7 @@ public class Control extends Subsystem {
     public void movePivot(PivotPosition newPosition) {
         pivot.setPosition(newPosition.pos);
         pivot2.setPosition(newPosition.pos);
+        pivotUChannel.setPosition(newPosition.pos);
     }
 
     /**
@@ -122,7 +125,7 @@ public class Control extends Subsystem {
      */
     public void movePivotSync(PivotPosition newPosition) {
         movePivot(newPosition);
-        while (Math.abs(pivot.getPosition() - newPosition.pos) > 0.05 && Math.abs(pivot2.getPosition() - newPosition.pos) > 0.05) {
+        while (Math.abs(pivot.getPosition() - newPosition.pos) > 0.05) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
