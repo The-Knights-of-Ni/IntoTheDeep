@@ -27,7 +27,7 @@ public class TeleOpSlider extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y;
+            double y = -gamepad1.left_stick_y * 0.5;
 
 //            List<DcMotor> motors = Arrays.asList(sl, sr);
 //            motors.parallelStream().forEach(motor -> {

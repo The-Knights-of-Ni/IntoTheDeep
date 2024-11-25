@@ -6,70 +6,86 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.Util.ServoEx;
+//import org.firstinspires.ftc.teamcode.Util.ServoEx;
 
 
 /**
  * Control subsystem for controlling arms and claws
  */
 public class Control extends Subsystem {
-    public final ServoEx claw; //The servo that controls the claw
-    public final ServoEx pivot1; //The Servo that controls the pivot
-    public final ServoEx pivot2; //The Servo that controls the pivot
-    public final ServoEx pivotUChannel; //The Servo that controls the pivot
-    public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
-    public final DcMotorEx linearSlide2;
+    public final Servo claw; //The servo that controls the claw
+    public final DcMotorEx pivot; //The DcMotorEx that controls the pivot
+//    public final ServoEx claw; //The servo that controls the claw
+//    public final ServoEx pivot1; //The Servo that controls the pivot
+//    public final ServoEx pivot2; //The Servo that controls the pivot
+//    public final ServoEx pivotUChannel; //The Servo that controls the pivot
+//    public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
+//    public final DcMotorEx linearSlide2;
 
-
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor1, Servo pivotMotor2, Servo pivotMotorUChannel,DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
+    public Control(Telemetry telemetry, Servo clawMotor, DcMotorEx pivotMotor) {
+//
+//    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor1, Servo pivotMotor2, Servo pivotMotorUChannel,DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
         super(telemetry, "control");
+        //Initializing instance variables
+        this.claw = clawMotor;
+        this.pivot = pivotMotor;
 
 
-        // Initializing instance variables
-        this.claw = (ServoEx) clawMotor;
-        this.pivot1 = (ServoEx) pivotMotor1;
-        this.pivot2 = (ServoEx) pivotMotor2;
-        this.pivotUChannel = (ServoEx) pivotMotorUChannel;
-        this.linearSlide = linearSlideMotor;
-        this.linearSlide2=linearSlideMotor2;
+//        // Initializing instance variables
+//        this.claw = (ServoEx) clawMotor;
+//        this.pivot1 = (ServoEx) pivotMotor1;
+//        this.pivot2 = (ServoEx) pivotMotor2;
+//        this.pivotUChannel = (ServoEx) pivotMotorUChannel;
+//        this.linearSlide = linearSlideMotor;
+//        this.linearSlide2=linearSlideMotor2;
     }
 
     /**
      * Gets all defaults, directions,etc. ready for the autonomous period
      */
     public void initDevicesAuto() {
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //pivot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //pivot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //pivot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //pivot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //pivotUChannel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //pivotUChannel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //claw.setDirection(Servo.Direction.FORWARD);
+        pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        claw.setDirection(Servo.Direction.FORWARD);
+
+//        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pivot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        pivot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pivot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        pivot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pivotUChannel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        pivotUChannel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        claw.setDirection(Servo.Direction.FORWARD);
     }
 
-    /*public void initDevicesAuto() {
-
-    }*/
+//    /*public void initDevicesAuto() {
+//
+//    }*/
 
     /**
      * Gets all defaults, directions,etc. ready for the teleop period
      */
     public void initDevicesTeleop() {
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //pivot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //pivot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //pivot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //pivot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //pivotUChannel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //pivotUChannel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //claw.setDirection(Servo.Direction.FORWARD);
+        pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        claw.setDirection(Servo.Direction.FORWARD);
+
+//        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pivot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        pivot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pivot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        pivot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pivotUChannel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        pivotUChannel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        claw.setDirection(Servo.Direction.FORWARD);
     }
 
 
@@ -138,9 +154,11 @@ public class Control extends Subsystem {
      * @param newPosition The position to move the pivot to
      */
     public void movePivot(PivotPosition newPosition) {
-        pivot1.setPower(-0.8);
-        pivot2.setPower(0.8);
-        while (pivot1.getCurrentPosition() < newPosition.pos) {
+        pivot.setPower(-0.8);
+        while (pivot.getCurrentPosition() < newPosition.pos) {
+//            pivot1.setPower(-0.8);
+//        pivot2.setPower(0.8);
+//        while (pivot1.getCurrentPosition() < newPosition.pos) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -148,8 +166,10 @@ public class Control extends Subsystem {
                 throw new RuntimeException(e);
             }
         }
-        pivot1.setPower(0);
-        pivot2.setPower(0);
+        pivot.setPower(0);
+
+//        pivot1.setPower(0);
+//        pivot2.setPower(0);
     }
 
     /**
@@ -160,7 +180,8 @@ public class Control extends Subsystem {
      */
     public void movePivotSync(PivotPosition newPosition) {
         movePivot(newPosition);
-        while (pivot1.isBusy()) {
+        while (pivot.isBusy()) {
+//            while (pivot1.isBusy()) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -184,29 +205,29 @@ public class Control extends Subsystem {
             this.pos = pos;
         }
     }
-    public void moveLinearSlide(LinearSlidePosition newPosition) {
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setTargetPosition(newPosition.pos);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide2.setTargetPosition(newPosition.pos);
-    }
+//    public void moveLinearSlide(LinearSlidePosition newPosition) {
+//        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        linearSlide.setTargetPosition(newPosition.pos);
+//        linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        linearSlide2.setTargetPosition(newPosition.pos);
+//    }
 
 
-    public void moveLinearSlideSync(LinearSlidePosition newPosition) {
-        moveLinearSlide(newPosition);
-        while (Math.abs(linearSlide.getCurrentPosition() - newPosition.pos) > 25) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                /*See note on InterruptedException above*/
-                throw new RuntimeException(e);
-            }
-        }
-    }
+//    public void moveLinearSlideSync(LinearSlidePosition newPosition) {
+//        moveLinearSlide(newPosition);
+//        while (Math.abs(linearSlide.getCurrentPosition() - newPosition.pos) > 25) {
+//            try {
+//                Thread.sleep(20);
+//            } catch (InterruptedException e) {
+//                /*See note on InterruptedException above*/
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
 
-    public void moveArm(LinearSlidePosition slidePosition, PivotPosition pivotPosition) {
-        moveLinearSlide(slidePosition);
-        movePivot(pivotPosition);
-    }
+//    public void moveArm(LinearSlidePosition slidePosition, PivotPosition pivotPosition) {
+//        moveLinearSlide(slidePosition);
+//        movePivot(pivotPosition);
+//    }
 }

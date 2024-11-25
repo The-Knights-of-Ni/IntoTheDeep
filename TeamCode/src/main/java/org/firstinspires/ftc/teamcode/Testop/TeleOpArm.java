@@ -36,13 +36,16 @@ public class TeleOpArm extends LinearOpMode {
         // Scan servo till stop pressed.
         while (opModeIsActive()) {
             if (gamepad1.a) {
+                double currentPosition = al.getPosition();
+                telemetry.addData("Current Position:", currentPosition);
+                telemetry.update();
                 al.setPosition(0.75);    //this will go backward
-                ar.setPosition(-0.75);
+//                ar.setPosition(0.75);
             }
-            if (gamepad1.b) {
-                al.setPosition(0.0);
-                ar.setPosition(-0.0);
-            }
+//            if (gamepad1.b) {
+//                al.setPosition(0.0);
+//                ar.setPosition(-0.0);
+//            }
 
 //            // slew the servo, according to the rampUp (direction) variable.
 //            if (rampUp) {

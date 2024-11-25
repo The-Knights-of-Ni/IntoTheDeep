@@ -5,29 +5,29 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import java.util.*;
 @TeleOp
 public class TeleOpSliderWithEncoder extends LinearOpMode {
     DcMotor sl;         // slider left
     DcMotor sr;         // slider right
-    double motorTicks = 537.7;    // 84 RPM - SKU 5202-0002-0071
+    double motorTicks = 537.7;    // 312 RPM - SKU 5202-0002-0071.  145.1 for 1150 RPM
+    double diff = 0.267;
     double newTarget;
 
     @Override
     public void runOpMode() throws InterruptedException {
         // Get motors
         sl = hardwareMap.dcMotor.get("sl");
-//        sr = hardwareMap.dcMotor.get("sr");
+        sr = hardwareMap.dcMotor.get("sr");
         telemetry.addData(">", "Starting slider with encoder..." );
         telemetry.update();
 
         // Set motor's direction for left and right slider
         sl.setDirection(DcMotorSimple.Direction.REVERSE);
-//        sr.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        sr.setDirection(DcMotorSimple.Direction.REVERSE);
+//
         // Use encoder
         sl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        sr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        sr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Boolean checker variables to determine moving logic.
         boolean buttona = true;
@@ -43,39 +43,37 @@ public class TeleOpSliderWithEncoder extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            if (gamepad1.left_stick_y != 0) {
+                double y = -gamepad1.left_stick_y * 0.5;
+                sl.setPower(y);
+                sr.setPower(y);
+            }
+
             telemetry.addData("start: ", "encoder test");
             telemetry.update();
 
 
-
-//            List<DcMotor> motors = Arrays.asList(sl, sr);
-//            motors.parallelStream().forEach(motor -> {
-//                // Execute the command
-//                telemetry.addData(">", "Starting thread..." );
-//                telemetry.update();
-//                motor.setPower(y);
-//            });
-                if (gamepad1.a && buttonb) {
-                    runWithEncoder(2.5);          // 1 = 1 rotation, lower bucket = 2.5 turnage, go to 3 if need to go above bucket
-                    buttona = false;
-                    //returnfromlow = true;
+            if (gamepad1.a && buttonb) {
+                runWithEncoder(2.5);          // 1 = 1 rotation, lower bucket = 2.5 turnage, go to 3 if need to go above bucket
+                buttona = false;
+                //returnfromlow = true;
 //                runWithEncoder(0.5);
-                }
-                else if (gamepad1.a && buttona) {
-                    runWithEncoder(-4);
-                    buttona = true;
-                }
+            }
+            else if (gamepad1.a && buttona) {
+                runWithEncoder(-4);
+                buttona = true;
+            }
 
-                if (gamepad1.b && buttona) {
-                    runWithEncoder(6.5);          // 1 = 1 rotation, higher bucket = 6.5 turnage, go to 7 if need to go above bucket
-                    buttonb = false;
+            if (gamepad1.b && buttona) {
+                runWithEncoder(6.5);          // 1 = 1 rotation, higher bucket = 6.5 turnage, go to 7 if need to go above bucket
+                buttonb = false;
 //                runWithEncoder(0.5);
-                }
-                else if (gamepad1.b && buttonb){
-                    runWithEncoder(4);
-                    buttonb = true;
-                    //returnfromhigh = true;
-                }
+            }
+            else if (gamepad1.b && buttonb){
+                runWithEncoder(4);
+                buttonb = true;
+                //returnfromhigh = true;
+            }
                 /*
                 Work In Progress
                 if (gamepad1.x && returnfromlow) {
@@ -93,15 +91,15 @@ public class TeleOpSliderWithEncoder extends LinearOpMode {
 
     public void runWithEncoder(double turnage){
         sl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        sr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         newTarget = motorTicks * turnage;
 
         sl.setTargetPosition((int)newTarget);
-//        sr.setTargetPosition((int)newTarget);
+        sr.setTargetPosition((int)newTarget);
 
         sl.setPower(1);
-//        sr.setPower(0.6);
+        sr.setPower(0.3);
 
 //        List<DcMotor> motors = Arrays.asList(sl, sr);
 //        motors.parallelStream().forEach(motor -> {
@@ -111,7 +109,7 @@ public class TeleOpSliderWithEncoder extends LinearOpMode {
 //            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        });
         sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void resetMotor(){
