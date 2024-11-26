@@ -5,41 +5,43 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import java.util.Arrays;
-import java.util.List;
-
 @TeleOp
 public class TeleOpSlider extends LinearOpMode {
+    DcMotor sl;         // slider left
+    DcMotor sr;         // slider right
+    double motorTicks = 537.7;    // Encoder ticks per rotation (use your specific motor specifications)
+    double newTarget;
+
     @Override
     public void runOpMode() throws InterruptedException {
         // Get motors
         DcMotor sl = hardwareMap.dcMotor.get("sl");
         DcMotor sr = hardwareMap.dcMotor.get("sr");
-        telemetry.addData(">", "Starting slider..." );
-        telemetry.update();
 
-        // set left slider motor and right slider motor, they need to be opposite
+        // Set motor's direction for left and right slider
         sl.setDirection(DcMotorSimple.Direction.REVERSE);
         sr.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        telemetry.addData(">", "Starting slider..." );
+        telemetry.update();
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y * 0.5;
+            double slValue = -gamepad1.left_stick_y * 0.41; // this motor moves faster and needs to sync with sr
+            double srValue = -gamepad1.left_stick_y * -0.5;
 
-//            List<DcMotor> motors = Arrays.asList(sl, sr);
-//            motors.parallelStream().forEach(motor -> {
-//                // Execute the command
-//                telemetry.addData(">", "Starting thread..." );
-//                telemetry.update();
-//                motor.setPower(y);
-//            });
+            sl.setPower(slValue);
+            sl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            sl.setPower(y);
-            sr.setPower(y);
+            sr.setPower(srValue);
+            sr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            telemetry.addData("Left Current Position: ", sl.getCurrentPosition());
+            telemetry.addData("Right Current Position: ", sr.getCurrentPosition());
+            telemetry.update();
         }
     }
 }
-
