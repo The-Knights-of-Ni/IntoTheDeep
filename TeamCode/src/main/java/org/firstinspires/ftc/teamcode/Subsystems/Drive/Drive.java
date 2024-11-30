@@ -105,7 +105,7 @@ public class Drive extends Subsystem {
 
         //Initializes motor directions. Motor directions default to foward, but we want them to be in reverse
         this.localizer.frontLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        this.localizer.rearRight.setDirection(DcMotorEx.Direction.REVERSE);
+        this.localizer.rearLeft.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
     /**
