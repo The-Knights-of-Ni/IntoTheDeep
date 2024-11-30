@@ -5,8 +5,34 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicController;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.Targeter;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.ServoEx;
+import androidx.annotation.Nullable;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Geometry.Path;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicControllerOutput;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicPIDController;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicController;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Localizer.MecanumLocalizer;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile.MotionProfile;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.IMU;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.MotorEncoders;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.Odometry;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.PoseEstimationMethod;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.PurePursuit;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.StaticTargeter;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.Targeter;
+import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
+import org.firstinspires.ftc.teamcode.Util.Pose;
+import org.firstinspires.ftc.teamcode.Util.Vector;
 
 
 /**
@@ -17,7 +43,7 @@ public class Control extends Subsystem {
     public final ServoEx pivot; //The Servo that controls the pivot
     public final ServoEx pivot2; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
-    public final DcMotorEx linearSlide2;
+    public final DcMotorEx linearSlide2; //The second DcMotorEx that controls the slide
 
     public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
         super(telemetry, "control");
@@ -151,6 +177,11 @@ public class Control extends Subsystem {
             }
         }
     }
+
+    public void moveLinearSlidePID(LinearSlidePosition newPosition) {
+        //To implement (mainly based on this resource: https://github.com/acmerobotics/road-runner/blob/master/doc/notebook/road-runner-lite.ipynb)
+    }
+
 
     public void moveArm(LinearSlidePosition slidePosition, PivotPosition pivotPosition) {
         moveLinearSlide(slidePosition);
