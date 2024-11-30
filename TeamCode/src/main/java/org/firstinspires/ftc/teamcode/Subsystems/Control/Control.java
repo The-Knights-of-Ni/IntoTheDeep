@@ -13,9 +13,9 @@ import org.firstinspires.ftc.teamcode.Util.ServoEx;
  * Control subsystem for controlling arms and claws
  */
 public class Control extends Subsystem {
-    public final ServoEx claw; //The servo that controls the claw
-    public final ServoEx pivot; //The Servo that controls the pivot
-    public final ServoEx pivot2; //The Servo that controls the pivot
+    public final Servo claw; //The servo that controls the claw
+    public final Servo pivot; //The Servo that controls the pivot
+    public final Servo pivot2; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
     public final DcMotorEx linearSlide2;
 
@@ -23,9 +23,9 @@ public class Control extends Subsystem {
         super(telemetry, "control");
 
         // Initializing instance variables
-        this.claw = (ServoEx) clawMotor;
-        this.pivot = (ServoEx) pivotMotor;
-        this.pivot2 = (ServoEx) pivotMotor2;
+        this.claw = clawMotor;
+        this.pivot = pivotMotor;
+        this.pivot2 = pivotMotor2;
         this.linearSlide = linearSlideMotor;
         this.linearSlide2 = linearSlideMotor2;
     }
@@ -52,13 +52,13 @@ public class Control extends Subsystem {
 
 
     public void moveClaw(ClawPosition newPosition) {
-        claw.turnToAngle(newPosition.pos);
+        claw.setPosition(newPosition.pos);
     }
 
     public void moveClawSync(ClawPosition newPosition) {
         moveClaw(newPosition);
         // Angles are all in degrees
-        while (Math.abs(claw.getAngle() - newPosition.pos) > 20) {
+        while (Math.abs(claw.getPosition() - newPosition.pos) > 20) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
