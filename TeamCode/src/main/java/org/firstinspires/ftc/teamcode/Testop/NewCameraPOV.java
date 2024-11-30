@@ -100,11 +100,7 @@ public class NewCameraPOV extends LinearOpMode {
 //            telemetry.addData("Center red: ", pipeline.center_red_value);
 //            telemetry.addData("Center green: ", pipeline.center_green_value);
 //            telemetry.addData("Center blue: ", pipeline.center_blue_value);
-            telemetry.addData("Center hue: ", pipeline.center_hue);
-            telemetry.addData("Center saturation: ", pipeline.center_saturation);
-            telemetry.addData("Center value: ", pipeline.center_value);
-            telemetry.addData("Area: ", pipeline.area);
-            telemetry.update();
+//            telemetry.update();
 
             /*
              * NOTE: stopping the stream from the camera early (before the end of the OpMode

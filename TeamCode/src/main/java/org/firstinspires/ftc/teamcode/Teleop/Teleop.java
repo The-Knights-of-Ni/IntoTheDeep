@@ -64,7 +64,7 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-        robot.control.initDevicesTeleop();
+//        robot.control.initDevicesTeleop();
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
         telemetry.log().add("Initialized, ready to start");
         telemetry.update();
