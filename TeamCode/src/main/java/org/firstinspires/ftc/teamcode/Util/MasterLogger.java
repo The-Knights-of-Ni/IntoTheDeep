@@ -30,7 +30,7 @@ public class MasterLogger {
         if (o.getClass().isInstance(Throwable.class)) {
             Log.e(tag, message, (Throwable) o);
         } else {
-            Log.e(tag, message);
+            Log.e(tag, message + ": " + o.toString());
         }
         WebLog.error(tag, message, o);
     }
@@ -56,7 +56,7 @@ public class MasterLogger {
         if (o.getClass().isInstance(Throwable.class)) {
             Log.w(tag, message, (Throwable) o);
         } else {
-            Log.w(tag, message);
+            Log.w(tag, message + ": " + o.toString());
         }
         WebLog.warning(tag, message, o);
     }
@@ -82,7 +82,7 @@ public class MasterLogger {
         if (o.getClass().isInstance(Throwable.class)) {
             Log.i(tag, message, (Throwable) o);
         } else {
-            Log.i(tag, message);
+            Log.i(tag, message + ": " + o.toString());
         }
         WebLog.info(tag, message, o);
     }
@@ -100,7 +100,7 @@ public class MasterLogger {
         if (o.getClass().isInstance(Throwable.class)) {
             Log.d(tag, message, (Throwable) o);
         } else {
-            Log.d(tag, message);
+            Log.d(tag, message + ": " + o.toString());
         }
         WebLog.debug(tag, message, o);
     }
@@ -118,7 +118,7 @@ public class MasterLogger {
         if (o.getClass().isInstance(Throwable.class)) {
             Log.v(tag, message, (Throwable) o);
         } else {
-            Log.v(tag, message);
+            Log.v(tag, message + ": " + o.toString());
         }
         WebLog.verbose(tag, message, o);
     }

@@ -196,8 +196,8 @@ public class Drive extends Subsystem {
             currentPose = poseEstimator.getPose();
             // Feeds pose into targeter to get target ...
             var targetPose = targeter.getTarget(currentPose);
-            logger.debug("Current", currentPose);
-            logger.debug("Target", targetPose);
+            logger.debug("Current", currentPose.toString());
+            logger.debug("Target", targetPose.toString());
             logger.debug("Heading", currentPose.heading);
             if (Math.abs(currentPose.heading - previousPosition.heading) > 25) {
                 positionController.resetHeadingPID();
