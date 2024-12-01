@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.opencv.core.Rect;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -138,4 +139,9 @@ public class Vision extends Subsystem {
         camera.stopStreaming();
         camera.closeCameraDevice();
     }
+
+    public Rect retrunBoundingBox(){
+        return pipeline.getMarkerLocation();
+    }
+
 }

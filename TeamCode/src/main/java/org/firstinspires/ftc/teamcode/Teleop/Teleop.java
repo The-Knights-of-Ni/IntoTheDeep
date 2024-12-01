@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 
 
+import static java.lang.Math.abs;
+
 import android.os.Build;
 
 
@@ -12,8 +14,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control.*;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.BarDetectionPipeline;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.opencv.core.Rect;
 
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +113,21 @@ public class Teleop extends LinearOpMode {
             if (Robot.gamepad1.xButton.isPressed() || Robot.gamepad2.xButton.isPressed()) {
                 twoGamepads = !twoGamepads;
                 telemetry.log().add("Switching to " + (twoGamepads ? "two" : "one") + " gamepad mode");
+            }
+            if (Robot.gamepad1.bButton.toggle) {
+                Rect r = robot.vision.retrunBoundingBox();
+                int xdiff = 1980/2-r.x;
+                /*
+                * When center of bounding box is to the left of center of screen move left, same for right
+                * */
+                if(xdiff < -50){
+                    // Move left
+                    motorPowers = robot.drive.calcMotorPowers(-0.2 * sensitivityHighPower, 0 * sensitivityHighPower, 0 * sensitivityHighPower);
+                }
+                else if(xdiff > 50){
+                    // Move right
+                    motorPowers = robot.drive.calcMotorPowers(0.2 * sensitivityHighPower, 0 * sensitivityHighPower, 0 * sensitivityHighPower);
+                }
             }
             if (twoGamepads) {
                 // Claw open/close - controlled by clicking b

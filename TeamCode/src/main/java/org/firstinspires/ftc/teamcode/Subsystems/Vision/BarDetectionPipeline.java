@@ -131,7 +131,6 @@ public class BarDetectionPipeline extends OpenCvPipeline {
                 maxRect = rect;
             }
         }
-
         boundingBox = maxRect;
         return threshImage;
     }
