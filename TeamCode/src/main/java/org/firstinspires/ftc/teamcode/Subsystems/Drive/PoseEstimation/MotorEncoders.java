@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation;
 
+import android.util.Log;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
@@ -10,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class MotorEncoders implements PoseEstimationMethod {
     // TODO: Calibrate both of these
     public static final double MILLIMETERS_PER_TICK = 0.00393700787;
-    public static final double wheelDisplacePerEncoderCount = 0.1;
+    public static final double wheelDisplacePerEncoderCount = 4.0;
     public static final double rb = 50 * MILLIMETERS_PER_TICK;
     MotorGeneric<Integer> initialMotorLocations = new MotorGeneric<>(0, 0, 0, 0);
     MotorGeneric<DcMotorEx> motors;
@@ -28,20 +31,25 @@ public class MotorEncoders implements PoseEstimationMethod {
         lastTime = timer.milliseconds();
         pose = new Pose(0, 0, 0);
         initialMotorLocations = new MotorGeneric<>(motors.frontLeft.getCurrentPosition(), motors.frontRight.getCurrentPosition(), motors.rearLeft.getCurrentPosition(), motors.rearRight.getCurrentPosition());
+        motors.frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motors.frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motors.rearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motors.rearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public void update() {
         var currentMotorLocations =  new MotorGeneric<>(motors.frontLeft.getCurrentPosition(), motors.frontRight.getCurrentPosition(), motors.rearLeft.getCurrentPosition(), motors.rearRight.getCurrentPosition());
-        //Compute change in encoder positions
+        Log.d("drive", "Motor Locations: " + currentMotorLocations);
+        // Compute change in encoder positions
         var deltaMotorLocations = new MotorGeneric<>(currentMotorLocations.frontLeft - initialMotorLocations.frontLeft, currentMotorLocations.frontRight - initialMotorLocations.frontRight, currentMotorLocations.rearLeft - initialMotorLocations.rearLeft, currentMotorLocations.rearRight - initialMotorLocations.rearRight);
         double displ_m0 = ((double) deltaMotorLocations.frontLeft) * wheelDisplacePerEncoderCount;
         double displ_m1 = ((double) deltaMotorLocations.frontRight) * wheelDisplacePerEncoderCount;
         double displ_m2 = ((double) deltaMotorLocations.rearLeft) * wheelDisplacePerEncoderCount;
         double displ_m3 = ((double) deltaMotorLocations.rearRight) * wheelDisplacePerEncoderCount;
 
-        //Compute the average displacement in order to untangle rotation
-        //from displacment
+        // Compute the average displacement in order to untangle rotation
+        // from displacement
         var forward_back = (displ_m0 + displ_m1 + displ_m2 + displ_m3) / 4.0;
         var strafe = (0 - displ_m1 - displ_m0 + displ_m2 + displ_m3) / 4.0;
         double delta_theta = (deltaMotorLocations.frontRight + deltaMotorLocations.rearRight - deltaMotorLocations.frontLeft - deltaMotorLocations.rearLeft) / (457.2);

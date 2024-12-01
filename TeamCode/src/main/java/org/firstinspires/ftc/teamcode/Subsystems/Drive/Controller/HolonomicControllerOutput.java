@@ -27,4 +27,14 @@ public class HolonomicControllerOutput implements ControllerOutput {
         this.heading = heading;
         this.currentPose = currentPose;
     }
+
+    @Override
+    public String toString() {
+        return "HolonomicControllerOutput{" +
+                "x=" + x +
+                ", y=" + y +
+                ", heading=" + heading +
+                ", currentPose=" + currentPose +
+                '}';
+    }
 }

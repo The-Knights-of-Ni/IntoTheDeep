@@ -196,14 +196,16 @@ public class Drive extends Subsystem {
             currentPose = poseEstimator.getPose();
             // Feeds pose into targeter to get target ...
             var targetPose = targeter.getTarget(currentPose);
-            logger.debug("Current", currentPose.toString());
-            logger.debug("Target", targetPose.toString());
+            logger.debug("Current", currentPose);
+            logger.debug("Target", targetPose);
             logger.debug("Heading", currentPose.heading);
             if (Math.abs(currentPose.heading - previousPosition.heading) > 25) {
                 positionController.resetHeadingPID();
             }
             // Feeds target into controller to get motor powers
-            localizer.setPowers(positionController.calculate(currentPose, targetPose));
+            var p = positionController.calculate(currentPose, targetPose);
+            logger.debug("Powers", p);
+            localizer.setPowers(p);
             // Checks if the robot is stuck
             currentTickCounts = new MotorGeneric<>(localizer.frontLeft.getCurrentPosition(), localizer.frontRight.getCurrentPosition(), localizer.rearLeft.getCurrentPosition(), localizer.rearRight.getCurrentPosition());
             if (Math.abs(currentTickCounts.frontLeft - previousTickCounts.frontLeft) > timeOutThreshold || Math.abs(currentTickCounts.frontRight - previousTickCounts.frontRight) > timeOutThreshold || Math.abs(currentTickCounts.rearLeft - previousTickCounts.rearLeft) > timeOutThreshold || Math.abs(currentTickCounts.rearRight - previousTickCounts.rearRight) > timeOutThreshold) {
