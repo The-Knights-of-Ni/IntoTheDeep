@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Control;
+package org.firstinspires.ftc.teamcode.Subsystems.Claw;
 
 /**
  * Units are in degrees

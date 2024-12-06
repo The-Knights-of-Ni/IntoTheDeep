@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Control;
+package org.firstinspires.ftc.teamcode.Subsystems.Arm;
 
 //Not sure if this will be needed for the pivot, but I've left the implementation in case it is
 /*TODO: Determine what values UP and DOWN should be, and/or replace UP and DOWN with any other positions we need*/

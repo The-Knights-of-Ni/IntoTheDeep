@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Control;
+package org.firstinspires.ftc.teamcode.Subsystems.Arm;
 
 /*TODO: Determine what values the positions should be should be*/
+
 /**
  * An enum to keep track of the positions we need the slide to be in regularly.
  */

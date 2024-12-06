@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive.Curve;
+package org.firstinspires.ftc.teamcode.Control.Curve;
 
 
 public class QuinticSpline1D {

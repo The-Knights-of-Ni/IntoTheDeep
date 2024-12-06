@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.PID;
+import org.firstinspires.ftc.teamcode.Control.PID;
 import org.firstinspires.ftc.teamcode.Util.Pose;
 
 /**

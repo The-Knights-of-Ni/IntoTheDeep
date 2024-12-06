@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems.Web;
 
 import org.firstinspires.ftc.teamcode.GamepadWrapper;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.PIDCoefficients;
+import org.firstinspires.ftc.teamcode.Control.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.Util.Pose;
 
 import java.util.ArrayList;

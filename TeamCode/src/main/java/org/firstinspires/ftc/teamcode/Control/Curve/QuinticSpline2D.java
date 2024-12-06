@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive.Curve;
+package org.firstinspires.ftc.teamcode.Control.Curve;
 
 import org.firstinspires.ftc.teamcode.Util.Vector;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile;
+package org.firstinspires.ftc.teamcode.Control.MotionProfile;
 
 public class MotionProfileOutput {
     public final MotionProfileOutput1D x;

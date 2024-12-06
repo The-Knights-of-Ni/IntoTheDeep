@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive;
+package org.firstinspires.ftc.teamcode.Control;
 
 import androidx.core.math.MathUtils;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *     <li>Integral Power Cap</li>
  * </ul>
  */
-public class PID {
+public class PIDVA {
     protected boolean hasRun = false;
     protected ElapsedTime timer = new ElapsedTime();
     protected double previousError = 0;
@@ -20,24 +20,18 @@ public class PID {
     protected double derivative = 0;
     protected double previousDerivative = 0;
     public static final double derivativeInverseFilterStrength = 0.7; // TODO: Should be configurable
-    private final double Kp;
-    private final double Ki;
-    private final double Kd;
+    private final PIDCoefficients<Double> pidCoefficients;
+    private final VACoefficients<Double> vaCoefficients;
     private final boolean lowPass;
 
-    public PID(double Kp, double Ki, double Kd, boolean lowPass) {
-        this.Kp = Kp;
-        this.Ki = Ki;
-        this.Kd = Kd;
+    public PIDVA(PIDCoefficients<Double> pidCoefficients, VACoefficients<Double> vaCoefficients) {
+        this(pidCoefficients, vaCoefficients, true);
+    }
+
+    public PIDVA(PIDCoefficients<Double> pidCoefficients, VACoefficients<Double> vaCoefficients, boolean lowPass) {
+        this.pidCoefficients = pidCoefficients;
+        this.vaCoefficients = vaCoefficients;
         this.lowPass = lowPass;
-    }
-
-    public PID(double Kp, double Ki, double Kd) {
-        this(Kp, Ki, Kd, true);
-    }
-
-    public PID(PIDCoefficients<Double> coefficients) {
-        this(coefficients.kP, coefficients.kI, coefficients.kD);
     }
 
     /**
@@ -47,7 +41,7 @@ public class PID {
      * @param measured current system state
      * @return PID output
      */
-    public double calculate(double target, double measured) {
+    public double calculate(double target, double measured, double velocity, double acceleration) {
         double dt = getDT();
         double error = calculateError(target, measured);
         double derivative = calculateDerivative(error, dt);
@@ -58,9 +52,11 @@ public class PID {
         previousError = error;
 
         // TODO: the abs of the integral sum*ki should be capped at 0.25 to not break everything.
-        var iTerm = integralSum * Ki;
+        var iTerm = integralSum * pidCoefficients.kI;
         // Cap output at range (-1,1).
-        return MathUtils.clamp(error * Kp + iTerm + derivative * Kd, -1, 1);
+        var pidPower = error * pidCoefficients.kP + iTerm + derivative * pidCoefficients.kD;
+        var vaPower = vaCoefficients.kV * velocity + vaCoefficients.kA * acceleration;
+        return MathUtils.clamp(pidPower + vaPower, -1, 1);
     }
 
     /**
@@ -90,17 +86,16 @@ public class PID {
         previousDerivative = derivative;
         derivative = (error - previousError) / dt;
         if (lowPass) {
-            derivative = PID.derivativeInverseFilterStrength * previousDerivative + derivative * (1 - PID.derivativeInverseFilterStrength);
+            derivative = PIDVA.derivativeInverseFilterStrength * previousDerivative + derivative * (1 - PIDVA.derivativeInverseFilterStrength);
         }
         return derivative;
     }
 
     @Override
     public String toString() {
-        return "PID {" +
-                "Kp=" + Kp +
-                ", Ki=" + Ki +
-                ", Kd=" + Kd +
+        return "PIDVA {" +
+                "PIDCoefficients=" + pidCoefficients.toString() +
+                "VACoefficients=" + vaCoefficients.toString() +
                 ", lowPass=" + lowPass +
                 ", dump=" + previousError + "|" + derivative + "|" + integralSum +
                 '}';

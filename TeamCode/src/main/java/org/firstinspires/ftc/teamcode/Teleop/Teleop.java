@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Control.*;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm.*;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -113,10 +113,10 @@ public class Teleop extends LinearOpMode {
                 // Claw open/close - controlled by clicking b
                 if (Robot.gamepad1.bButton.isPressed() || Robot.gamepad2.bButton.isPressed()) {
                     if (clawOpen) {
-                        robot.control.moveClaw(ClawPosition.CLOSE);
+                        robot.claw.closeClaw();
                         telemetry.log().add("Closing claw");
                     } else {
-                        robot.control.moveClaw(ClawPosition.OPEN);
+                        robot.claw.openClaw();
                         telemetry.log().add("Opening claw");
                     }
                     clawOpen = !clawOpen;
@@ -124,36 +124,36 @@ public class Teleop extends LinearOpMode {
 
                 // Scoring Position (4 pre-set positions)
                 if (Robot.gamepad2.dPadUp.isPressed()) {
-                    robot.control.moveArm(LinearSlidePosition.BASKETLOW, PivotPosition.BASKETLOW);
+                    robot.arm.moveArm(LinearSlidePosition.BASKETLOW, PivotPosition.BASKETLOW);
                     telemetry.log().add("Moving to basket low");
                 }
                 if (Robot.gamepad2.dPadDown.isPressed()) {
-                    robot.control.moveArm(LinearSlidePosition.BASKETHIGH, PivotPosition.BASKETHIGH);
+                    robot.arm.moveArm(LinearSlidePosition.BASKETHIGH, PivotPosition.BASKETHIGH);
                     telemetry.log().add("Moving to basket high");
                 }
                 if (Robot.gamepad2.dPadRight.isPressed()) {
-                    robot.control.moveArm(LinearSlidePosition.SUBMERSIBLELOW, PivotPosition.SUBMERSIBLELOW);
+                    robot.arm.moveArm(LinearSlidePosition.SUBMERSIBLELOW, PivotPosition.SUBMERSIBLELOW);
                     telemetry.log().add("Moving to submersible low");
                 }
                 if (Robot.gamepad2.dPadLeft.isPressed()) {
-                    robot.control.moveArm(LinearSlidePosition.SUBMERSIBLEHIGH, PivotPosition.SUBMERSIBLEHIGH);
+                    robot.arm.moveArm(LinearSlidePosition.SUBMERSIBLEHIGH, PivotPosition.SUBMERSIBLEHIGH);
                     telemetry.log().add("Moving to submersible high");
                 }
                 if (Robot.gamepad2.bButton.isPressed()) {
-                    robot.control.moveArm(LinearSlidePosition.DOWN, PivotPosition.DOWN);
+                    robot.arm.moveArm(LinearSlidePosition.DOWN, PivotPosition.DOWN);
                     telemetry.log().add("Moving to down (reset position)");
                 }
 
 
                 // Adjust height (manual linear slide override)
                 if (Robot.gamepad1.triggerLeft > 0.05) {
-                    robot.control.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.control.linearSlide.setPower(-Robot.gamepad1.triggerLeft);
+                    robot.arm.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.arm.linearSlide.setPower(-Robot.gamepad1.triggerLeft);
                 }
                 // Adjust height (manual linear slide override)
                 if (Robot.gamepad1.triggerRight > 0.05) {
-                    robot.control.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.control.linearSlide.setPower(Robot.gamepad1.triggerRight);
+                    robot.arm.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.arm.linearSlide.setPower(Robot.gamepad1.triggerRight);
                 }
             } else {
                 // TODO: single gamepad controls

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Control;
+package org.firstinspires.ftc.teamcode.Subsystems.Arm;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -6,24 +6,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.Util.ServoEx;
 
 
 /**
  * Control subsystem for controlling arms and claws
  */
-public class Control extends Subsystem {
-    public final Servo claw; //The servo that controls the claw
+public class Arm extends Subsystem {
     public final Servo pivot; //The Servo that controls the pivot
     public final Servo pivot2; //The Servo that controls the pivot
     public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
     public final DcMotorEx linearSlide2;
 
-    public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
+    public Arm(Telemetry telemetry, Servo pivotMotor, Servo pivotMotor2, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
         super(telemetry, "control");
 
         // Initializing instance variables
-        this.claw = clawMotor;
         this.pivot = pivotMotor;
         this.pivot2 = pivotMotor2;
         this.linearSlide = linearSlideMotor;
@@ -48,59 +45,6 @@ public class Control extends Subsystem {
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-
-    public void moveClaw(ClawPosition newPosition) {
-        claw.setPosition(newPosition.pos);
-    }
-
-    public void moveClawSync(ClawPosition newPosition) {
-        moveClaw(newPosition);
-        // Angles are all in degrees
-        while (Math.abs(claw.getPosition() - newPosition.pos) > 20) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
-     * Begins the process of opening the claw.
-     * Does not wait for the claw action to finish opening before terminating the method and
-     * allowing other functions to begin.
-     */
-    public void openClaw() {
-        moveClaw(ClawPosition.OPEN);
-    }
-
-    /**
-     * Begins the process of closing the claw.
-     * Does not wait for the claw action to finish opening before terminating the method and
-     * allowing other functions to begin.
-     */
-    public void closeClaw() {
-        moveClaw(ClawPosition.CLOSE);
-    }
-
-    /**
-     * Opens the claw fully.
-     * The method will not terminate until the claw is fully open, meaning that only the action
-     * of the claw opening can be occurring at the given time.
-     */
-    public void openClawSync() {
-        moveClawSync(ClawPosition.OPEN);
-    }
-
-    /**
-     * Closes the claw fully.
-     * The method will not terminate until the claw is fully closed, meaning that only the action
-     * of the claw closing can be occurring at the given time.
-     */
-    public void closeClawSync() {
-        moveClawSync(ClawPosition.CLOSE);
     }
 
     /**

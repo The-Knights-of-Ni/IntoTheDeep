@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile;
+package org.firstinspires.ftc.teamcode.Control.MotionProfile;
 
 public interface MotionProfile {
     MotionProfileOutput calculate(double time);

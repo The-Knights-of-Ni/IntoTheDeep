@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile;
+package org.firstinspires.ftc.teamcode.Control.MotionProfile;
 
 import org.firstinspires.ftc.teamcode.Util.Pose;
 

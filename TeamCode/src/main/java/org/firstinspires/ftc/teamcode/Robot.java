@@ -6,7 +6,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
+import org.firstinspires.ftc.teamcode.Subsystems.Claw.Claw;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimationMethodChoice;
@@ -42,8 +43,9 @@ public class Robot {
 
     public BNO055IMU imu;
     // Subsystems
+    public Claw claw;
     public Drive drive;
-    public Control control;
+    public Arm arm;
     public Vision vision;
     public WebThread web;
 
@@ -164,16 +166,17 @@ public class Robot {
                     telemetry);
         }
         logger.info("Drive subsystem init finished");
-
-        logger.debug("Control subsystem init started");
-//        control = new Control(telemetry,
-//                (Servo) hardwareMap.get("claw"),
-//                (Servo) hardwareMap.get("pivot"),
-//                (Servo) hardwareMap.get("pivot2"),
-//                (DcMotorEx) hardwareMap.get("linearSlide"),
-//                (DcMotorEx) hardwareMap.get("linearSlide2")
-//        );
-        logger.info("Control subsystem init finished");
+        logger.debug("Claw subsystem init started");
+        claw = new Claw((Servo) hardwareMap.get("claw"));
+        logger.info("Claw subsystem init finished");
+        logger.debug("Pivot subsystem init started");
+        arm = new Arm(telemetry,
+                (Servo) hardwareMap.get("pivot"),
+                (Servo) hardwareMap.get("pivot2"),
+                (DcMotorEx) hardwareMap.get("linearSlide"),
+                (DcMotorEx) hardwareMap.get("linearSlide2")
+        );
+        logger.info("Pivot subsystem init finished");
 
         if (visionEnabled) {
             logger.debug("Vision subsystem init started");

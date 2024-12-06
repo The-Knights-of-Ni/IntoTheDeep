@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile;
+package org.firstinspires.ftc.teamcode.Control.MotionProfile;
 
 public class TrapezoidalMotionProfile1D implements MotionProfile1D {
     public double maxAcceleration;
