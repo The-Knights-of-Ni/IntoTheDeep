@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auto.Auto;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Pose;
 
@@ -41,6 +42,24 @@ public class ArmCalibration extends Auto {
             pivotLog.addData("Pivot Position", pivotPosition);
             pivot2Log.addData("Pivot 2 Position", pivot2Position);
             telemetry.update();
+            if (Robot.gamepad1.triggerLeft > 0.1) {
+                robot.arm.linearSlide.setPower(-Robot.gamepad1.triggerLeft);
+                robot.arm.linearSlide2.setPower(-Robot.gamepad1.triggerLeft);
+            } else if (Robot.gamepad1.triggerRight > 0.1) {
+                robot.arm.linearSlide.setPower(Robot.gamepad1.triggerRight);
+                robot.arm.linearSlide2.setPower(Robot.gamepad1.triggerRight);
+            } else {
+                robot.arm.linearSlide.setPower(0);
+                robot.arm.linearSlide2.setPower(0);
+            }
+
+            if (Robot.gamepad1.leftStickY > 0.1) {
+                robot.arm.pivot.setPosition(Robot.gamepad1.leftStickY);
+                robot.arm.pivot2.setPosition(Robot.gamepad1.leftStickY);
+            } else if (Robot.gamepad1.leftStickY < -0.1) {
+                robot.arm.pivot.setPosition(Robot.gamepad1.leftStickY);
+                robot.arm.pivot2.setPosition(Robot.gamepad1.leftStickY);
+            }
         }
         sleep(2000);
     }
