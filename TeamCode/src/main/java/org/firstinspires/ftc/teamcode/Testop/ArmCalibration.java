@@ -54,11 +54,11 @@ public class ArmCalibration extends Auto {
             }
 
             if (Robot.gamepad1.leftStickY > 0.1) {
-                robot.arm.pivot.setPosition(Robot.gamepad1.leftStickY);
-                robot.arm.pivot2.setPosition(Robot.gamepad1.leftStickY);
+                robot.arm.pivot.setPosition((Robot.gamepad1.leftStickY / 2) + 0.5);
+                robot.arm.pivot2.setPosition((Robot.gamepad1.leftStickY / 2) + 0.5);
             } else if (Robot.gamepad1.leftStickY < -0.1) {
-                robot.arm.pivot.setPosition(Robot.gamepad1.leftStickY);
-                robot.arm.pivot2.setPosition(Robot.gamepad1.leftStickY);
+                robot.arm.pivot.setPosition((-Robot.gamepad1.leftStickY / 2) + 0.5);
+                robot.arm.pivot2.setPosition((-Robot.gamepad1.leftStickY / 2) + 0.5);
             }
         }
         sleep(2000);
