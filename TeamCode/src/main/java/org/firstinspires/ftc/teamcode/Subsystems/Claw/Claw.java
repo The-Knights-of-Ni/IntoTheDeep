@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
     public final Servo claw; //The servo that controls the claw
+
     public Claw(Servo clawMotor) {
         this.claw = clawMotor;
     }
