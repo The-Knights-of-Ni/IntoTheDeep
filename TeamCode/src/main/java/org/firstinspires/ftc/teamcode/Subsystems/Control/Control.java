@@ -159,8 +159,8 @@ public class Control extends Subsystem {
         1) https://github.com/acmerobotics/road-runner/blob/master/doc/notebook/road-runner-lite.ipynb)
      */
     public void moveLinearSlidePID(LinearSlidePosition newPosition) {
-        int lastError = 0;
-        int integral = 0;
+        double lastError = 0;
+        double integral = 0;
         double error;
         double pFix;
         double iFix;
