@@ -170,8 +170,8 @@ public class Robot {
                 (Servo) hardwareMap.get("claw"),
                 (Servo) hardwareMap.get("pivot"),
                 (Servo) hardwareMap.get("pivot2"),
-                (DcMotorEx) hardwareMap.get("linearSlide"),
-                (DcMotorEx) hardwareMap.get("linearSlide2")
+                (DcMotorEx) hardwareMap.get("linearSlideL"),
+                (DcMotorEx) hardwareMap.get("linearSlideR")
         );
         logger.info("Control subsystem init finished");
 

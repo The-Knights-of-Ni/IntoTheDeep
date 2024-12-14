@@ -147,13 +147,13 @@ public class Teleop extends LinearOpMode {
 
                 // Adjust height (manual linear slide override)
                 if (Robot.gamepad1.triggerLeft > 0.05) {
-                    robot.control.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.control.linearSlide.setPower(-Robot.gamepad1.triggerLeft);
+                    robot.control.linearSlideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.control.linearSlideL.setPower(-Robot.gamepad1.triggerLeft);
                 }
                 // Adjust height (manual linear slide override)
                 if (Robot.gamepad1.triggerRight > 0.05) {
-                    robot.control.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.control.linearSlide.setPower(Robot.gamepad1.triggerRight);
+                    robot.control.linearSlideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.control.linearSlideL.setPower(Robot.gamepad1.triggerRight);
                 }
             } else {
                 // TODO: single gamepad controls

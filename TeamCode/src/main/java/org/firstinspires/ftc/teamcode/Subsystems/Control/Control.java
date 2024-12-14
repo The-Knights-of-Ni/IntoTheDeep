@@ -5,34 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicController;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotorGeneric;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.Targeter;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.Util.ServoEx;
-import androidx.annotation.Nullable;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Geometry.Path;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicControllerOutput;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicPIDController;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Controller.HolonomicController;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Localizer.MecanumLocalizer;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.MotionProfile.MotionProfile;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.IMU;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.MotorEncoders;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.Odometry;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.PoseEstimation.PoseEstimationMethod;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.PurePursuit;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.StaticTargeter;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.Targeter.Targeter;
-import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.Util.Pose;
-import org.firstinspires.ftc.teamcode.Util.Vector;
 
 
 /**
@@ -42,8 +15,8 @@ public class Control extends Subsystem {
     public final Servo claw; //The servo that controls the claw
     public final Servo pivot; //The Servo that controls the pivot
     public final Servo pivot2; //The Servo that controls the pivot
-    public final DcMotorEx linearSlide; //The DcMotorEx that controls the linear slide
-    public final DcMotorEx linearSlide2; //The second DcMotorEx that controls the slide
+    public final DcMotorEx linearSlideL; //The DcMotorEx that controls the left linear slide motor
+    public final DcMotorEx linearSlideR; //The DcMotorEx that controls the right linear slide motor
 
     public Control(Telemetry telemetry, Servo clawMotor, Servo pivotMotor, Servo pivotMotor2, DcMotorEx linearSlideMotor, DcMotorEx linearSlideMotor2) {
         super(telemetry, "control");
@@ -52,28 +25,28 @@ public class Control extends Subsystem {
         this.claw = clawMotor;
         this.pivot = pivotMotor;
         this.pivot2 = pivotMotor2;
-        this.linearSlide = linearSlideMotor;
-        this.linearSlide2 = linearSlideMotor2;
+        this.linearSlideL = linearSlideMotor;
+        this.linearSlideR = linearSlideMotor2;
     }
 
     /**
      * Gets all defaults, directions, etc. ready for the autonomous period
      */
     public void initDevicesAuto() {
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlideL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlideR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
      * Gets all defaults, directions, etc. ready for the teleop period
      */
     public void initDevicesTeleop() {
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlideL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlideR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -159,16 +132,16 @@ public class Control extends Subsystem {
     }
 
     public void moveLinearSlide(LinearSlidePosition newPosition) {
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setTargetPosition(newPosition.pos);
-        linearSlide2.setTargetPosition(newPosition.pos);
+        linearSlideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlideR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlideL.setTargetPosition(newPosition.pos);
+        linearSlideR.setTargetPosition(newPosition.pos);
 
     }
 
     public void moveLinearSlideSync(LinearSlidePosition newPosition) {
         moveLinearSlide(newPosition);
-        while ((Math.abs(linearSlide.getCurrentPosition() - newPosition.pos) > 25) && (Math.abs(linearSlide2.getCurrentPosition() - newPosition.pos) > 25)) {
+        while ((Math.abs(linearSlideL.getCurrentPosition() - newPosition.pos) > 25) && (Math.abs(linearSlideR.getCurrentPosition() - newPosition.pos) > 25)) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -178,8 +151,37 @@ public class Control extends Subsystem {
         }
     }
 
+    /*This function is used to sync the linear slide motors*/
+    //TODO: WRITE BETTER DESCRIPTION
+    //TODO: Tune PID constants
+    //TODO: Add a rotations to ticks conversion so that the linear slide position can be given in rotations but the rest of the function works in ticks
+    /*Main sources:
+        1) https://github.com/acmerobotics/road-runner/blob/master/doc/notebook/road-runner-lite.ipynb)
+     */
     public void moveLinearSlidePID(LinearSlidePosition newPosition) {
-        //To implement (mainly based on this resource: https://github.com/acmerobotics/road-runner/blob/master/doc/notebook/road-runner-lite.ipynb)
+        int lastError = 0;
+        int integral = 0;
+        double error;
+        double pFix;
+        double iFix;
+        double dFix;
+        linearSlideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlideR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //int motor1Abs = Math.abs(linearSlideL.getCurrentPosition());
+        //int motor2Abs = Math.abs(linearSlideL.getCurrentPosition());
+
+        //TODO: use the above resource to control acceleration and velocity
+        //Tell the slide to keep moving until it's close to its final position (being careful not to overshoot)
+        //Takes the average of the two slide motor positions and compares this to 25 ticks (keeps going only if it's greater than 25 ticks from the target position)
+        while(((Math.abs(linearSlideL.getCurrentPosition() - newPosition.pos) + Math.abs(linearSlideR.getCurrentPosition() - newPosition.pos)) / 2)  > 25){
+            error = Math.abs(linearSlideL.getCurrentPosition()) - Math.abs(linearSlideR.getCurrentPosition());
+            pFix = error * 0.5;
+            iFix = (integral + error)*0.01;
+            dFix = (error - lastError) * 4;
+            error = lastError;
+            linearSlideL.setPower(0.3 + (pFix + iFix + dFix));
+            linearSlideR.setPower(-0.3 - (pFix + iFix + dFix));
+        }
     }
 
 

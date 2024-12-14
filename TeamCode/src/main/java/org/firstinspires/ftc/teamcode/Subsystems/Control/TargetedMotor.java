@@ -45,7 +45,7 @@ public class TargetedMotor<I extends TargetedMotorConstants> {
         double timeOutStartedTime = 0.0;
         // If the encoder does not change by at least this number of ticks, the motor is considered to be stuck
         int timeOutThreshold = 3;
-        MotorControlData motorControlData = new MotorControlData(innerMotor, pid, pos, timeOutThreshold, logger.telemetry, "linearSlide");
+        MotorControlData motorControlData = new MotorControlData(innerMotor, pid, pos, timeOutThreshold, logger.telemetry, "linearSlideL");
         while (((!motorControlData.isDone) && (!isTimeOutExceeded))) {
             // Update current variables
             currentTime = timer.nanoseconds() - startTime;
