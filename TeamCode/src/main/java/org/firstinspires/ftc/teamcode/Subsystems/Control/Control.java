@@ -157,6 +157,7 @@ public class Control extends Subsystem {
     //TODO: Add a rotations to ticks conversion so that the linear slide position can be given in rotations but the rest of the function works in ticks
     /*Main sources:
         1) https://github.com/acmerobotics/road-runner/blob/master/doc/notebook/road-runner-lite.ipynb)
+        2) https://ev3lessons.com/en/ProgrammingLessons/advanced/scratch-PID.pdf
      */
     public void moveLinearSlidePID(LinearSlidePosition newPosition) {
         double lastError = 0;
