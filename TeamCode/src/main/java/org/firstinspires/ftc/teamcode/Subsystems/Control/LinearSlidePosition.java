@@ -6,10 +6,10 @@ package org.firstinspires.ftc.teamcode.Subsystems.Control;
  */
 public enum LinearSlidePosition {
     DOWN(0),
-    BASKETLOW(0),
-    BASKETHIGH(0),
-    SUBMERSIBLELOW(0),
-    SUBMERSIBLEHIGH(0);
+    BASKETLOW(1),
+    BASKETHIGH(2),
+    SUBMERSIBLELOW(3),
+    SUBMERSIBLEHIGH(4);
     public final int pos;
 
     LinearSlidePosition(int pos) {
