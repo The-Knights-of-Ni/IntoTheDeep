@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -44,15 +45,12 @@ public class TeleOp2024 extends LinearOpMode {
     }
 
     public enum Pivot {
-        FULL(355.0),
-        ONE(1.0),
-        SMALL(0.6),
-        MEDIUM(0.4),
         ZERO(0.0),      // Initial position 0
-        ZERO1(0.06),    // Intemediate position to slow down when putting back to ZERO
-        LARGE(0.85),    // Position to pick up sample
-        LARGE1(0.60),   // Intermediate position to slow down when putting to LARGE
-        CARRY(0.5);     // Position for carrying to bucket
+        START(0.08),    // Start position
+        PICKUP(0.87),   // Position to pick up sample
+        LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
+        CARRY(0.5),     // Position for carrying to bucket
+        SUBMERGE(0.75); // Position for Submerge
 
 
         private double swing;
@@ -96,6 +94,9 @@ public class TeleOp2024 extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            telemetry.addData("Robot ", "start:");
+            telemetry.update();
+
             moveRobot();
 
             // Manually move up and down for both sliders
@@ -103,8 +104,8 @@ public class TeleOp2024 extends LinearOpMode {
                 sl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 sr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-                double slValue = -gamepad1.left_stick_y * 0.574; // this motor moves faster and needs to sync with sr
-                double srValue = -gamepad1.left_stick_y * -0.7; // 0.41, 0.5
+                double slValue = -gamepad1.left_stick_y * 0.41; // this motor moves faster and needs to sync with sr
+                double srValue = -gamepad1.left_stick_y * -0.5; // 0.41,  -0.5// 0.574, -0.7
 
                 sl.setPower(slValue);
                 sl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -113,27 +114,34 @@ public class TeleOp2024 extends LinearOpMode {
                 sr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
-            telemetry.addData("start: ", "encoder test");
-            telemetry.update();
-
             // Move up both sliders to HIGH position for top bucket
-            if (gamepad1.y) {
+            if (gamepad1.left_bumper) {
                 moveSlidersWithEncoder(sl, sr, Bucket.HIGH);
             }
 
             // Move up both sliders to LOW position for bottom bucket
-            if (gamepad1.x) {
+            if (gamepad1.left_trigger != 0.0) {
                 moveSlidersWithEncoder(sl, sr, Bucket.LOW);
             }
 
             // Put back arm/pivot to initial position
+            if (gamepad1.x) {
+                setPosition(al, ar, Pivot.START);
+            }
+
+            // Move arm from initial position to pickup position
+            if (gamepad1.b) {
+                setPosition(al, ar, Pivot.PICKUP);
+            }
+
+            // Position to pick up from submersible
             if (gamepad1.a) {
-                // resetMotor();
-                setPosition(al, ar, Pivot.ZERO1);
-                printCurrentPositionAndDirection(al, ar);
-                // wait(1000);
-                // setPosition(al, ar, Pivot.ZERO);
-                // printCurrentPositionAndDirection(al, ar);
+                setPosition(al, ar, Pivot.SUBMERGE);
+            }
+
+            // Move arm to scoring position for buckets
+            if (gamepad1.y) {
+                setPosition(al, ar, Pivot.CARRY);
             }
 
             // Open claw
@@ -141,43 +149,16 @@ public class TeleOp2024 extends LinearOpMode {
                 clawOpen(c);
             }
 
-            // Position to pick up from submersible
-            if (gamepad2.right_trigger != 0.0) {
-                setPosition(al, ar, Pivot.LARGE1);
-            }
-
-            // Close clas
+            // Close claw
             if (gamepad1.right_bumper) {
                 clawClose(c);
-            }
-
-            // Drop down arm for picking up Sample
-            if (gamepad1.left_trigger != 0.0) {
-                setPosition(al, ar, Pivot.LARGE);
-            }
-
-            // Move arm to scoring position for buckets
-            if (gamepad1.left_bumper) {
-                setPosition(al, ar, Pivot.CARRY);
-            }
-
-            // Move arm from initial position to pickup position
-            if (gamepad1.b) {
-                setPosition(al, ar, Pivot.ZERO);
-                printCurrentPositionAndDirection(al, ar);
-
-                setPosition(al, ar, Pivot.LARGE1);
-                printCurrentPositionAndDirection(al, ar);
-                wait(1000);
-                setPosition(al, ar, Pivot.LARGE);
-                printCurrentPositionAndDirection(al, ar);
             }
         }
     }
 
     public void moveRobot() {
-        double y = -gamepad2.left_stick_y; // Remember, Y stick value is reversed
-        double x = gamepad2.left_stick_x * 1.1; // Counteract imperfect strafing
+        double y = -gamepad2.left_stick_y * 0.7; // Remember, Y stick value is reversed 0.7 to slow down
+        double x = gamepad2.left_stick_x * 1.1 * 0.7; // Counteract imperfect strafing
         double rx = gamepad2.right_stick_x;
 
         // Denominator is the largest motor power (absolute value) or 1
@@ -296,8 +277,29 @@ public class TeleOp2024 extends LinearOpMode {
         ar.setDirection(d);
     }
 
+    // incrementally move servo to target position
     public void setPosition(Servo al, Servo ar, Pivot p){
-        al.setPosition(p.getSwing());
-        ar.setPosition(p.getSwing());
+        double targetPosition = p.getSwing();
+        double currentPosition = al.getPosition();
+        // double currentPositionRight = ar.getPosition();
+        double increment = 0.03;
+
+        System.out.println("Current Position:" + currentPosition);
+        telemetry.addData("Current Position:", currentPosition);
+        telemetry.update();
+        if (currentPosition < targetPosition) {
+            currentPosition += increment;
+            if (currentPosition > targetPosition) {
+                currentPosition = targetPosition;
+            }
+        } else if (currentPosition > targetPosition) {
+            currentPosition -= increment;
+            if (currentPosition < targetPosition) {
+                currentPosition = targetPosition;
+            }
+        }
+
+        al.setPosition(currentPosition);
+        ar.setPosition(currentPosition);
     }
 }
