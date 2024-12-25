@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PID implements MoveSystem {
+public class PID {
     private double Kp;
     private double Ki;
     private double Kd;

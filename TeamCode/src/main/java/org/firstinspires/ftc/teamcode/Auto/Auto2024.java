@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-import org.firstinspires.ftc.teamcode.Testop.TeleOp2024;
 
 @Autonomous(name = "Auto2024")
 public class Auto2024 extends LinearOpMode {
@@ -30,10 +29,10 @@ public class Auto2024 extends LinearOpMode {
     private static final double motorKi = 0.000175;
     private static final double motorKd = 0.0003;
     // PID Controllers
-    public MoveSystem flControl;
-    public MoveSystem frControl;
-    public MoveSystem rlControl;
-    public MoveSystem rrControl;
+    public PID flControl;
+    public PID frControl;
+    public PID rlControl;
+    public PID rrControl;
 
 
     public ElapsedTime timer;
@@ -136,13 +135,10 @@ public class Auto2024 extends LinearOpMode {
         // reset the timeout time and start motion.
         timer.reset();
 
-//        moveSlidersWithEncoder(sl, sr, Bucket.LOW);
-//        setPosition(al, ar, Pivot.CARRY);
-
         // Robot starts here
         // move robot
-//        move(new Vector2D(12*mmPerInch, 0), 0); // move left
-//        move(new Vector2D(-12*mmPerInch, 0), 0); // mover right
+        move(new Vector2D(6*mmPerInch, 0), 0); // move left
+        move(new Vector2D(-6*mmPerInch, 0), 0); // mover right
 ////        move(new Vector2D(0, 12*mmPerInch), 0);   // move forward
 ////        move(new Vector2D(0, -12*mmPerInch), 0);  // move backward
 //
@@ -156,7 +152,7 @@ public class Auto2024 extends LinearOpMode {
                 setPosition(al, ar, Pivot.CARRY);
                 wait(1000);
                 clawOpen(c);
-                wait(1  000);
+                wait(1000);
                 clawClose(c);
                 setDataRady();
             }
@@ -179,12 +175,12 @@ public class Auto2024 extends LinearOpMode {
         tickCount[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         tickCount[3] = (int)((distance * Math.cos(angle)));
         tickCount[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
-        MoveSystem[] pids = {new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd)};
+        PID[] pids = {new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd)};
         allMotorControl(tickCount, pids);
         stop();
     }
 
-    public void allMotorControl(int[] tickCount, MoveSystem[] moveSystems) {
+    public void allMotorControl(int[] tickCount, PID[] pids) {
         // Refresh motors
         stop();
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -195,10 +191,10 @@ public class Auto2024 extends LinearOpMode {
         boolean initialized = false;
 
         // Initialize PID controllers
-        this.flControl = moveSystems[0];
-        this.frControl = moveSystems[1];
-        this.rlControl = moveSystems[2];
-        this.rrControl = moveSystems[3];
+        this.flControl = pids[0];
+        this.frControl = pids[1];
+        this.rlControl = pids[2];
+        this.rrControl = pids[3];
 
         // Current motor encoder values
         int currentCountFL;
