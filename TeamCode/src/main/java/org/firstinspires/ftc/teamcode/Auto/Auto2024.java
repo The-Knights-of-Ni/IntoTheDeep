@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.firstinspires.ftc.teamcode.Testop.TeleOp2024;
 
 @Autonomous(name = "Auto2024")
 public class Auto2024 extends LinearOpMode {
@@ -46,7 +47,6 @@ public class Auto2024 extends LinearOpMode {
     Servo al;
     Servo ar;
     Servo c;
-
     private long startTime;
 
     public enum Bucket {
@@ -74,11 +74,11 @@ public class Auto2024 extends LinearOpMode {
 
     public enum Pivot {
         ZERO(0.0),      // Initial position 0
-        START(0.08),    // Start position
+        START(0.11),    // Start position
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
         CARRY(0.5),     // Position for carrying to bucket
-        SUBMERGE(0.75); // Position for Submerge
+        SUBMERGE(0.72); // Position for Submerge
 
 
         private double swing;
@@ -93,8 +93,16 @@ public class Auto2024 extends LinearOpMode {
         }
     }
 
+    private boolean dataRady = false;
+
+    public synchronized void setDataRady() {
+        dataRady = true;
+        notifyAll();
+    }
+
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public synchronized void runOpMode() throws InterruptedException {
         timer = new ElapsedTime();
 
         // Motors for wheels
@@ -120,12 +128,39 @@ public class Auto2024 extends LinearOpMode {
         sr.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Starting ", "Auto:");
+        telemetry.addData("Servo C ", c.toString());
+        telemetry.addData("CurrentPosition C:", c.getPosition());
         telemetry.update();
 
-        move(new Vector2D(12*mmPerInch, 0), 0); // move left
-        move(new Vector2D(-12*mmPerInch, 0), 0);
-//        move(new Vector2D(0, 12*mmPerInch), 0);
-//        move(new Vector2D(0, -12*mmPerInch), 0);
+        waitForStart();
+        // reset the timeout time and start motion.
+        timer.reset();
+
+//        moveSlidersWithEncoder(sl, sr, Bucket.LOW);
+//        setPosition(al, ar, Pivot.CARRY);
+
+        // Robot starts here
+        // move robot
+//        move(new Vector2D(12*mmPerInch, 0), 0); // move left
+//        move(new Vector2D(-12*mmPerInch, 0), 0); // mover right
+////        move(new Vector2D(0, 12*mmPerInch), 0);   // move forward
+////        move(new Vector2D(0, -12*mmPerInch), 0);  // move backward
+//
+        // move arm to scoring position
+        while (opModeIsActive()) {
+            while (!dataRady) {
+                setPosition(al, ar, Pivot.START);
+                wait(1000);
+                moveSlidersWithEncoder(sl, sr, Bucket.LOW);
+                wait(1000);
+                setPosition(al, ar, Pivot.CARRY);
+                wait(1000);
+                clawOpen(c);
+                wait(1  000);
+                clawClose(c);
+                setDataRady();
+            }
+        }
     }
 
     public void move(Vector2D v, double turnAngle) {
@@ -281,4 +316,60 @@ public class Auto2024 extends LinearOpMode {
         this.rearRight.setMode(mode);
     }
 
+    public void moveSlidersWithEncoder(DcMotor sl, DcMotor sr, Bucket b) {
+        // Use encoder
+        sl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        sr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        sl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        double newTargetLeft;
+        double newTargetRight;
+
+        newTargetLeft = motorTicks * b.getLeftTurnage();
+        newTargetRight = motorTicks * b.getRightTurnage();
+
+        sl.setTargetPosition((int)newTargetLeft);
+        sr.setTargetPosition((int)newTargetRight);
+
+        sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        sl.setPower(0.5);
+        sr.setPower(0.5);
+
+        sl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        sr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void resetMotor() {
+        sl.setTargetPosition(0);
+        sr.setTargetPosition(0);
+
+        sl.setPower(0.5);
+        sr.setPower(0.5);
+
+        sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void clawOpen(Servo c){
+        c.setPosition(0.3);     //0.3=160degree
+    }
+
+    public void clawClose(Servo c){
+        c.setPosition(0.09);     //0.09=.5" gap
+    }
+
+    public void setPosition(Servo al, Servo ar, Pivot p){
+        double targetPosition = p.getSwing();
+        telemetry.addData("Target Position:", targetPosition);
+        telemetry.update();
+
+        al.setPosition(targetPosition);
+        ar.setPosition(targetPosition);
+    }
+
 }
+

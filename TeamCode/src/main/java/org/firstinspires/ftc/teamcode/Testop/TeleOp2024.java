@@ -46,11 +46,11 @@ public class TeleOp2024 extends LinearOpMode {
 
     public enum Pivot {
         ZERO(0.0),      // Initial position 0
-        START(0.08),    // Start position
+        START(0.11),    // Start position
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
         CARRY(0.5),     // Position for carrying to bucket
-        SUBMERGE(0.75); // Position for Submerge
+        SUBMERGE(0.72); // Position for Submerge
 
 
         private double swing;
