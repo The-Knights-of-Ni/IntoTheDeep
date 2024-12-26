@@ -50,7 +50,7 @@ public class Auto2024 extends LinearOpMode {
 
     public enum Bucket {
         BOTTOM(0.0, 0.0),
-        LOW(2.41, -2.5),    //LOW(2.41, -2.5). ==> 26" to the top
+        LOW(2.48, -2.5),    //LOW(2.41, -2.5). ==> 26" to the top
         HIGH(5.31, -5.5);   //HIGH(5.31, -5.5) ==> 39" to the top
 
         private double leftTurnage;
@@ -76,7 +76,7 @@ public class Auto2024 extends LinearOpMode {
         START(0.11),    // Start position
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
-        CARRY(0.5),     // Position for carrying to bucket
+        CARRY(0.55),     // Position for carrying to bucket
         SUBMERGE(0.72); // Position for Submerge
 
 
@@ -92,16 +92,9 @@ public class Auto2024 extends LinearOpMode {
         }
     }
 
-    private boolean dataRady = false;
-
-    public synchronized void setDataRady() {
-        dataRady = true;
-        notifyAll();
-    }
-
 
     @Override
-    public synchronized void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
         timer = new ElapsedTime();
 
         // Motors for wheels
@@ -137,29 +130,43 @@ public class Auto2024 extends LinearOpMode {
 
         // Robot starts here
         // move robot
-        move(new Vector2D(6*mmPerInch, 0), 0); // move left
-        move(new Vector2D(-6*mmPerInch, 0), 0); // mover right
+//        move(new Vector2D(6*mmPerInch, 0), 0); // move left
+//        move(new Vector2D(-6*mmPerInch, 0), 0); // mover right
 ////        move(new Vector2D(0, 12*mmPerInch), 0);   // move forward
 ////        move(new Vector2D(0, -12*mmPerInch), 0);  // move backward
 //
         // move arm to scoring position
-        while (opModeIsActive()) {
-            while (!dataRady) {
-                setPosition(al, ar, Pivot.START);
-                wait(1000);
-                moveSlidersWithEncoder(sl, sr, Bucket.LOW);
-                wait(1000);
-                setPosition(al, ar, Pivot.CARRY);
-                wait(1000);
-                clawOpen(c);
-                wait(1000);
-                clawClose(c);
-                setDataRady();
-            }
-        }
+        clawClose(c);
+        setPosition(al, ar, Pivot.START);
+        move(new Vector2D(0, 13*mmPerInch), 0); // move forward
+        move(new Vector2D(0,0),-65); // turn to bucket
+        move(new Vector2D(0, 8*mmPerInch), 0); // strafe forwards bucket
+        move(new Vector2D(4*mmPerInch, 0*mmPerInch), 0); // adjust/scoot towards bucket
+        moveSlidersWithEncoder(sl, sr, Bucket.HIGH);
+        Thread.sleep(3000);
+        setPosition(al, ar, Pivot.CARRY);
+        Thread.sleep(2000);
+        clawOpen(c);
+        Thread.sleep(1000);
+        clawClose(c);
+        Thread.sleep(500);
+        resetMotor();
+        setPosition(al, ar, Pivot.START);
+        move(new Vector2D(0,0),75); // turn to bucket
+        move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
+        move(new Vector2D(0,0),40); // turn to bucket
+        move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
+        Thread.sleep(1000);
+        setPosition(al, ar, Pivot.CARRY);
+        Thread.sleep(5000);
+        stop();
     }
 
     public void move(Vector2D v, double turnAngle) {
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Vector2D newV = new Vector2D(v.getX() * COUNTS_PER_MM * COUNTS_CORRECTION_X, v.getY() * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
         // Sqrt2 is introduced as a correction factor, since the pi/4 in the next line is required
         // for the strafer chassis to operate properly
@@ -177,7 +184,10 @@ public class Auto2024 extends LinearOpMode {
         tickCount[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
         PID[] pids = {new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd)};
         allMotorControl(tickCount, pids);
-        stop();
+        frontLeft.setPower(0.0);
+        frontRight.setPower(0.0);
+        rearLeft.setPower(0.0);
+        rearRight.setPower(0.0);
     }
 
     public void allMotorControl(int[] tickCount, PID[] pids) {
@@ -332,8 +342,8 @@ public class Auto2024 extends LinearOpMode {
         sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sl.setPower(0.5);
-        sr.setPower(0.5);
+        sl.setPower(0.75);
+        sr.setPower(0.75);
 
         sl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -355,7 +365,7 @@ public class Auto2024 extends LinearOpMode {
     }
 
     public void clawClose(Servo c){
-        c.setPosition(0.09);     //0.09=.5" gap
+        c.setPosition(0.05);     //0.09=.5" gap
     }
 
     public void setPosition(Servo al, Servo ar, Pivot p){
