@@ -50,8 +50,8 @@ public class Auto2024_1 extends LinearOpMode {
 
     public enum Bucket {
         BOTTOM(0.0, 0.0),
-        LOW(2.48, -2.5),    //LOW(2.41, -2.5). ==> 26" to the top
-        HIGH(5.31, -5.5);   //HIGH(5.31, -5.5) ==> 39" to the top
+        LOW(2.41, -2.41),    //LOW(2.41, -2.5). ==> 26" to the top
+        HIGH(5.31, -5.31);   //HIGH(5.31, -5.5) ==> 39" to the top
 
         private double leftTurnage;
         private double rightTurnage;

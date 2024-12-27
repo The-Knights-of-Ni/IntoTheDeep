@@ -51,8 +51,8 @@ public class Auto2024_2 extends LinearOpMode {
 
     public enum Bucket {
         BOTTOM(0.0, 0.0),
-        LOW(2.48, -2.5),    //LOW(2.41, -2.5). ==> 26" to the top
-        HIGH(5.31, -5.5);   //HIGH(5.31, -5.5) ==> 39" to the top
+        LOW(2.41, -2.41),    //LOW(2.41, -2.5). ==> 26" to the top
+        HIGH(5.31, -5.31);   //HIGH(5.31, -5.5) ==> 39" to the top
 
         private double leftTurnage;
         private double rightTurnage;
@@ -139,7 +139,7 @@ public class Auto2024_2 extends LinearOpMode {
         // move arm to scoring position
         clawClose(c);
         setPosition(al, ar, Pivot.START);
-        
+
 //        move(new Vector2D(0, 13*mmPerInch), 0); // move forward
 //        move(new Vector2D(0,0),-65); // turn to bucket
 //        move(new Vector2D(0, 8*mmPerInch), 0); // strafe forwards bucket
