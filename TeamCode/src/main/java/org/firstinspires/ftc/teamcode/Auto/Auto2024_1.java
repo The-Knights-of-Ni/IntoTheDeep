@@ -140,11 +140,11 @@ public class Auto2024_1 extends LinearOpMode {
         setPosition(al, ar, Pivot.START);
         move(new Vector2D(0, 13*mmPerInch), 0); // move forward
         move(new Vector2D(0,0),-65); // turn to bucket
-        move(new Vector2D(0, 8*mmPerInch), 0); // strafe forwards bucket
-        move(new Vector2D(4*mmPerInch, 0*mmPerInch), 0); // adjust/scoot towards bucket
-        moveSlidersWithEncoder(sl, sr, Bucket.HIGH);
+        move(new Vector2D(0, 8*mmPerInch), 0); // adjust/scoot towards bucket
+        move(new Vector2D(4*mmPerInch, 0*mmPerInch), 0); // strafe torwards bucket
+        moveSlidersWithEncoder(sl, sr, Bucket.HIGH); // move linear slide up
         Thread.sleep(3000);
-        setPosition(al, ar, Pivot.CARRY);
+        setPosition(al, ar, Pivot.CARRY); // move arm up
         Thread.sleep(2000);
         clawOpen(c);
         Thread.sleep(1000);
@@ -152,9 +152,9 @@ public class Auto2024_1 extends LinearOpMode {
         Thread.sleep(500);
         resetMotor();
         setPosition(al, ar, Pivot.START);
-        move(new Vector2D(0,0),75); // turn to bucket
+        move(new Vector2D(0,0),75); // turn away from bucket
         move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
-        move(new Vector2D(0,0),40); // turn to bucket
+        move(new Vector2D(0,0),40); // turn to bar
         move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
         Thread.sleep(1000);
         setPosition(al, ar, Pivot.CARRY);
