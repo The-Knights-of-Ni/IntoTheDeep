@@ -8,10 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-@Autonomous(name = "Auto2024")
-public class Auto2024 extends LinearOpMode {
+@Autonomous(name = "Auto2024_2")
+public class Auto2024_2 extends LinearOpMode {
     private static final double mmPerInch = 25.4;
     private static final double MOTOR_TICK_PER_REV_YELLOW_JACKET_312 = 537.6;
     private static final double DRIVE_GEAR_REDUCTION = 1.0; // This is < 1.0 if geared UP
@@ -138,27 +139,29 @@ public class Auto2024 extends LinearOpMode {
         // move arm to scoring position
         clawClose(c);
         setPosition(al, ar, Pivot.START);
-        move(new Vector2D(0, 13*mmPerInch), 0); // move forward
-        move(new Vector2D(0,0),-65); // turn to bucket
-        move(new Vector2D(0, 8*mmPerInch), 0); // strafe forwards bucket
-        move(new Vector2D(4*mmPerInch, 0*mmPerInch), 0); // adjust/scoot towards bucket
-        moveSlidersWithEncoder(sl, sr, Bucket.HIGH);
-        Thread.sleep(3000);
-        setPosition(al, ar, Pivot.CARRY);
-        Thread.sleep(2000);
-        clawOpen(c);
-        Thread.sleep(1000);
-        clawClose(c);
-        Thread.sleep(500);
-        resetMotor();
-        setPosition(al, ar, Pivot.START);
-        move(new Vector2D(0,0),75); // turn to bucket
-        move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
-        move(new Vector2D(0,0),40); // turn to bucket
-        move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
-        Thread.sleep(1000);
-        setPosition(al, ar, Pivot.CARRY);
-        Thread.sleep(5000);
+        
+//        move(new Vector2D(0, 13*mmPerInch), 0); // move forward
+//        move(new Vector2D(0,0),-65); // turn to bucket
+//        move(new Vector2D(0, 8*mmPerInch), 0); // strafe forwards bucket
+//        move(new Vector2D(4*mmPerInch, 0*mmPerInch), 0); // adjust/scoot towards bucket
+//        moveSlidersWithEncoder(sl, sr, Bucket.HIGH);
+//        Thread.sleep(3000);
+//        setPosition(al, ar, Pivot.CARRY);
+//        Thread.sleep(2000);
+//        clawOpen(c);
+//        Thread.sleep(1000);
+//        clawClose(c);
+//        Thread.sleep(500);
+//        resetMotor();
+//        setPosition(al, ar, Pivot.START);
+//        move(new Vector2D(0,0),75); // turn to bucket
+//        move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
+//        move(new Vector2D(0,0),40); // turn to bucket
+//        move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
+//        Thread.sleep(1000);
+//        setPosition(al, ar, Pivot.CARRY);
+//        Thread.sleep(5000);
+
         stop();
     }
 
