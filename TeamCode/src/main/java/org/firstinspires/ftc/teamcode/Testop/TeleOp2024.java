@@ -23,8 +23,8 @@ public class TeleOp2024 extends LinearOpMode {
 
     public enum Bucket {
         BOTTOM(0.0, 0.0),
-        LOW(2.41, -2.5),    //LOW(2.41, -2.5). ==> 26" to the top
-        HIGH(5.31, -5.5);   //HIGH(5.31, -5.5) ==> 39" to the top
+        LOW(2.41, -2.41),    //LOW(2.41, -2.5). ==> 26" to the top
+        HIGH(5.31, -5.31);   //HIGH(5.31, -5.5) ==> 39" to the top
 
         private double leftTurnage;
         private double rightTurnage;
@@ -49,7 +49,7 @@ public class TeleOp2024 extends LinearOpMode {
         START(0.11),    // Start position
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
-        CARRY(0.5),     // Position for carrying to bucket
+        CARRY(0.55),     // Position for carrying to bucket
         SUBMERGE(0.72); // Position for Submerge
 
 
