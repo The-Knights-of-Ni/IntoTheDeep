@@ -148,10 +148,9 @@ public class Auto2024_1 extends LinearOpMode {
         Thread.sleep(2000);
         clawOpen(c);
         Thread.sleep(1000);
-        clawClose(c);
+        setPosition(al, ar, Pivot.START);
         Thread.sleep(500);
         resetMotor();
-        setPosition(al, ar, Pivot.START);
         move(new Vector2D(0,0),75); // turn to bucket
         move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
         move(new Vector2D(0,0),40); // turn to bucket

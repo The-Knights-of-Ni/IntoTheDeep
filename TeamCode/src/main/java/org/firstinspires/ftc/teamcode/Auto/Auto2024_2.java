@@ -78,6 +78,7 @@ public class Auto2024_2 extends LinearOpMode {
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
         CARRY(0.55),     // Position for carrying to bucket
+        HIGHBAR(0.575),
         SUBMERGE(0.72); // Position for Submerge
 
 
@@ -139,6 +140,38 @@ public class Auto2024_2 extends LinearOpMode {
         // move arm to scoring position
         clawClose(c);
         setPosition(al, ar, Pivot.START);
+
+        move(new Vector2D(0, 12*mmPerInch), 0); // move forward
+        setPosition(al, ar, Pivot.HIGHBAR);
+        Thread.sleep(2000);
+        move(new Vector2D(0, 2*mmPerInch), 0); // move forward
+        moveSlidersWithEncoder(sl, sr, Bucket.LOW);
+        Thread.sleep(2000);
+        clawOpen(c);
+        Thread.sleep(1000);
+        resetMotor();
+        setPosition(al, ar, Pivot.START);
+        move(new Vector2D(8*mmPerInch, 0), 0);
+        move(new Vector2D(0, 0), 27);
+        move(new Vector2D(0, 27*mmPerInch), 0); // move forward
+        move(new Vector2D(0, 0), 27);
+        move(new Vector2D(23*mmPerInch, 0), 0); // scoot towards OZ
+        move(new Vector2D(0, -10*mmPerInch), 0); // move backwards
+        clawOpen(c);
+        move(new Vector2D(3*mmPerInch, 0), -50); // turn towards element
+        move(new Vector2D(-1*mmPerInch, 0), 0); // turn towards element
+        clawClose(c);
+
+
+//        setPosition(al, ar, Pivot.START);
+//        move(new Vector2D(0, -15*mmPerInch), 0); // move backwards
+//        move(new Vector2D(-26*mmPerInch, 0), 5); // scoot away from from OZ
+//        move(new Vector2D(0, 7*mmPerInch), 0); // move forward
+//        move(new Vector2D(26*mmPerInch, 0), 0); // scoot towards OZ
+
+
+        Thread.sleep(5000);
+
 
 //        move(new Vector2D(0, 13*mmPerInch), 0); // move forward
 //        move(new Vector2D(0,0),-65); // turn to bucket
