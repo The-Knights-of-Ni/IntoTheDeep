@@ -128,13 +128,6 @@ public class Auto2024_1 extends LinearOpMode {
         // reset the timeout time and start motion.
         timer.reset();
 
-        // Robot starts here
-        // move robot
-//        move(new Vector2D(6*mmPerInch, 0), 0); // move left
-//        move(new Vector2D(-6*mmPerInch, 0), 0); // mover right
-////        move(new Vector2D(0, 12*mmPerInch), 0);   // move forward
-////        move(new Vector2D(0, -12*mmPerInch), 0);  // move backward
-//
         // move arm to scoring position
         clawClose(c);
         setPosition(al, ar, Pivot.START);

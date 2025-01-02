@@ -130,13 +130,6 @@ public class Auto2024_2 extends LinearOpMode {
         // reset the timeout time and start motion.
         timer.reset();
 
-        // Robot starts here
-        // move robot
-//        move(new Vector2D(6*mmPerInch, 0), 0); // move left
-//        move(new Vector2D(-6*mmPerInch, 0), 0); // mover right
-////        move(new Vector2D(0, 12*mmPerInch), 0);   // move forward
-////        move(new Vector2D(0, -12*mmPerInch), 0);  // move backward
-//
         // move arm to scoring position
         clawClose(c);
         setPosition(al, ar, Pivot.START);
@@ -162,38 +155,7 @@ public class Auto2024_2 extends LinearOpMode {
         move(new Vector2D(-1*mmPerInch, 0), 0); // turn towards element
         clawClose(c);
 
-
-//        setPosition(al, ar, Pivot.START);
-//        move(new Vector2D(0, -15*mmPerInch), 0); // move backwards
-//        move(new Vector2D(-26*mmPerInch, 0), 5); // scoot away from from OZ
-//        move(new Vector2D(0, 7*mmPerInch), 0); // move forward
-//        move(new Vector2D(26*mmPerInch, 0), 0); // scoot towards OZ
-
-
         Thread.sleep(5000);
-
-
-//        move(new Vector2D(0, 13*mmPerInch), 0); // move forward
-//        move(new Vector2D(0,0),-65); // turn to bucket
-//        move(new Vector2D(0, 8*mmPerInch), 0); // strafe forwards bucket
-//        move(new Vector2D(4*mmPerInch, 0*mmPerInch), 0); // adjust/scoot towards bucket
-//        moveSlidersWithEncoder(sl, sr, Bucket.HIGH);
-//        Thread.sleep(3000);
-//        setPosition(al, ar, Pivot.CARRY);
-//        Thread.sleep(2000);
-//        clawOpen(c);
-//        Thread.sleep(1000);
-//        clawClose(c);
-//        Thread.sleep(500);
-//        resetMotor();
-//        setPosition(al, ar, Pivot.START);
-//        move(new Vector2D(0,0),75); // turn to bucket
-//        move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
-//        move(new Vector2D(0,0),40); // turn to bucket
-//        move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
-//        Thread.sleep(1000);
-//        setPosition(al, ar, Pivot.CARRY);
-//        Thread.sleep(5000);
 
         stop();
     }
