@@ -104,8 +104,8 @@ public class TeleOp2024 extends LinearOpMode {
                 sl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 sr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-                double slValue = -gamepad1.left_stick_y * 0.41; // this motor moves faster and needs to sync with sr
-                double srValue = -gamepad1.left_stick_y * -0.5; // 0.41,  -0.5// 0.574, -0.7
+                double slValue = -gamepad1.left_stick_y * 0.8; // 0.41 this motor moves faster and needs to sync with sr
+                double srValue = -gamepad1.left_stick_y * -0.8; // 0.41,  -0.5// 0.574, -0.7
 
                 sl.setPower(slValue);
                 sl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -203,8 +203,8 @@ public class TeleOp2024 extends LinearOpMode {
         System.out.println("Left Current Position (before): " + sl.getCurrentPosition());
         System.out.println("Right Current Position (before): " + sr.getCurrentPosition());
 
-        sl.setPower(0.5);
-        sr.setPower(0.5);
+        sl.setPower(0.8);
+        sr.setPower(0.8);
 
         sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -237,7 +237,7 @@ public class TeleOp2024 extends LinearOpMode {
     public void clawClose(Servo c){
         printClawPosition(c);
         // wait(1000);
-        c.setPosition(0.09);     //0.09=.5" gap
+        c.setPosition(0.08);     //0.09=.5" gap; smaller number = smaller gap
         printClawPosition(c);
     }
 
