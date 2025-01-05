@@ -50,7 +50,7 @@ public class TeleOp2024 extends LinearOpMode {
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
         CARRY(0.55),     // Position for carrying to bucket
-        SUBMERGE(0.72); // Position for Submerge
+        SUBMERGE(0.77); // Position for Submerge
 
 
         private double swing;
