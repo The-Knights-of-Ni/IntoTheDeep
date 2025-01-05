@@ -154,7 +154,7 @@ public class Auto2024_1_1 extends LinearOpMode {
         clawOpen(c); // open claw
         // --To Sample
         move(new Vector2D(-7*mmPerInch,4*mmPerInch),0); // move to sample
-        move(new Vector2D(-3.0*mmPerInch,0),0); // move to sample - move right
+        move(new Vector2D(-4.0*mmPerInch,0),0); // move to sample - move right
         move(new Vector2D(0, 4.0*mmPerInch), 0); // adjust to move backward
         clawClose(c); // close claw
         Thread.sleep(500); // wait
@@ -170,39 +170,40 @@ public class Auto2024_1_1 extends LinearOpMode {
         Thread.sleep(250);
         resetMotor();
 
-        // SCORE THIRD SAMPLE
-        // --To Sample
-        move(new Vector2D(0,0),75); // turn to sample
-        setPosition(al, ar, Pivot.SUBMERGE); // move pivot to pick up sample
-        setPosition(al, ar, Pivot.PICKUP); // move pivot to pick up sample
-        clawOpen(c); // open claw
-        move(new Vector2D(-11*mmPerInch,3.0*mmPerInch),0); // move to sample
-        move(new Vector2D(0,2.5*mmPerInch),0); // move closer
-        clawClose(c); // close claw
-        Thread.sleep(500); // wait
-        // --To Bucket
-        setPosition(al, ar, Pivot.CARRY); // move arm up
-        move(new Vector2D(0, -5.5*mmPerInch), 0); // back up
-        move(new Vector2D(0, 0), -70); // turn to bucket
-        move(new Vector2D(-4.5*mmPerInch, -3*mmPerInch), 0); //move right
-        moveSlidersWithEncoder(sl, sr, Bucket.HIGH); // move linear slide up
-        Thread.sleep(1000);
-        clawOpen(c);
-        Thread.sleep(500);
-        resetMotor();
-        Thread.sleep(250);
-        setPosition(al, ar, Pivot.START);
-        Thread.sleep(250);
-
-
-//        move(new Vector2D(0,0),80); // turn away from bucket
-//        move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
-//        move(new Vector2D(0,0),40); // turn to bar
-//        move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
+//        // SCORE THIRD SAMPLE
+//        // --To Sample
+//        move(new Vector2D(0,0),75); // turn to sample
+//        setPosition(al, ar, Pivot.SUBMERGE); // move pivot to pick up sample
+//        setPosition(al, ar, Pivot.PICKUP); // move pivot to pick up sample
+//        clawOpen(c); // open claw
+//        move(new Vector2D(-11*mmPerInch,3.0*mmPerInch),0); // move to sample
+//        move(new Vector2D(0,2.5*mmPerInch),0); // move closer
+//        clawClose(c); // close claw
+//        Thread.sleep(500); // wait
+//        // --To Bucket
+//        setPosition(al, ar, Pivot.CARRY); // move arm up
+//        move(new Vector2D(0, -5.5*mmPerInch), 0); // back up
+//        move(new Vector2D(0, 0), -70); // turn to bucket
+//        move(new Vector2D(-4.5*mmPerInch, -3*mmPerInch), 0); //move right
+//        moveSlidersWithEncoder(sl, sr, Bucket.HIGH); // move linear slide up
 //        Thread.sleep(1000);
-//        setPosition(al, ar, Pivot.CARRY);
-//        Thread.sleep(5000);
-//        stop();
+//        clawOpen(c);
+//        clawClose(c);
+//        Thread.sleep(500);
+//        resetMotor();
+//        Thread.sleep(250);
+//        setPosition(al, ar, Pivot.START);
+//        Thread.sleep(250);
+
+
+        move(new Vector2D(0,0),80); // turn away from bucket
+        move(new Vector2D(0*mmPerInch, 25*mmPerInch), 0);
+        move(new Vector2D(0,0),40); // turn to bar
+        move(new Vector2D(0*mmPerInch, 20*mmPerInch), 0);
+        Thread.sleep(1000);
+        setPosition(al, ar, Pivot.CARRY);
+        Thread.sleep(5000);
+        stop();
     }
 
     public void move(Vector2D v, double turnAngle) {
