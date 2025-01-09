@@ -78,7 +78,7 @@ public class Auto2024_1_1 extends LinearOpMode {
         PICKUP(0.87),   // Position to pick up sample
         LARGE1(0.7),   // Intermediate position to slow down when putting to LARGE
         CARRY(0.55),     // Position for carrying to bucket
-        SUBMERGE(0.72); // Position for Submerge
+        SUBMERGE(0.77); // Position for Submerge
 
 
         private double swing;
@@ -148,19 +148,19 @@ public class Auto2024_1_1 extends LinearOpMode {
         Thread.sleep(1500);
 
         // ===== SCORE SECOND SAMPLE =====
-        move(new Vector2D(0,0),72); // turn to sample
+        move(new Vector2D(0,0),70); // turn to sample
         setPosition(al, ar, Pivot.SUBMERGE); // move pivot to pick up sample
         setPosition(al, ar, Pivot.PICKUP); // move pivot to pick up sample
         clawOpen(c); // open claw
         // --To Sample
         move(new Vector2D(-7*mmPerInch,4*mmPerInch),0); // move to sample
-        move(new Vector2D(-3.2*mmPerInch,0),0); // move to sample - move right (need full battery)
-        move(new Vector2D(0, 4.0*mmPerInch), 0); // adjust to move backward
+        move(new Vector2D(-4.5*mmPerInch,6.0*mmPerInch),0); // move to sample - move right (need full battery)
+//        move(new Vector2D(0, 6.0*mmPerInch), 0); // adjust to move backward (closer to sample)
         clawClose(c); // close claw
         Thread.sleep(500); // wait
         setPosition(al, ar, Pivot.CARRY); // move arm up
         // --To Bucket
-        move(new Vector2D(0, 0), -70); // turn to bucket
+        move(new Vector2D(0, 0), -75); // turn to bucket
         move(new Vector2D(-5*mmPerInch, 3*mmPerInch), 0); //scoot towards bucket
         moveSlidersWithEncoder(sl, sr, Bucket.HIGH); // move linear slide up
         Thread.sleep(2000);
